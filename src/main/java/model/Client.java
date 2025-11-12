@@ -3,6 +3,8 @@ package model;
 public class Client {
     private String firstName;
     private String lastName;
+    private String username;
+    private Account account;
 
     public String getFirstName() {
         return firstName;
@@ -20,10 +22,24 @@ public class Client {
         this.lastName = lastName;
     }
 
+    public String getUsername(){
+        return username;
+    }
+    public void setUsername(String firstName, String lastName){
+        this.username = firstName + " " + lastName;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
 
     @Override
     public String toString() {
-        return "Holder{" +
+        return "Client{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 '}';
