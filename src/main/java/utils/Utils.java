@@ -39,7 +39,7 @@ public class Utils {
         int counter = 0;
         if(!logs.isEmpty()){
             for(String log : logs){
-                System.out.println("System:::: -> " + counter + " - " + log + "\n");
+                System.out.println("System:::: -> " + counter + " - " + log);
                 counter++;
             }
         }

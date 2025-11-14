@@ -10,8 +10,13 @@ public class Account {
 
 
     public Account(){
-        this.ID = Integer.parseInt(Utils.generateNumbers(5));
+        this.ID = Integer.parseInt(Utils.generateNumbers(8));
     }
+
+
+
+
+
 
 
     public int getID() {

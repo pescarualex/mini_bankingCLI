@@ -3,10 +3,10 @@ package model;
 import java.util.List;
 
 public class Bank {
-    private String bankName;
-    private String bankSwift;
-    private String paymentNetwork;
-    private String bankCode;
+    private final String bankName;
+    private final String bankSwift;
+    private final String paymentNetwork;
+    private final String bankCode;
     private List<Client> clients;
 
 
@@ -22,24 +22,12 @@ public class Bank {
         return bankName;
     }
 
-    public String getBankSwift() {
-        return bankSwift;
-    }
-
     public String getPaymentNetwork() {
         return paymentNetwork;
     }
 
-    public void setPaymentNetwork(String paymentNetwork) {
-        this.paymentNetwork = paymentNetwork;
-    }
-
     public String getBankCode() {
         return bankCode;
-    }
-
-    public void setBankCode(String bankCode) {
-        this.bankCode = bankCode;
     }
 
     public List<Client> getClients() {

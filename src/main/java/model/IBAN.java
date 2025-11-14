@@ -6,11 +6,11 @@ import utils.Utils;
 public class IBAN {
     private final String IBAN;
 
-    public IBAN(String bankName) {
-        this.IBAN = generateIBAN("RO", bankName);
+    public IBAN(String bankCode) {
+        this.IBAN = generateIBAN("RO", bankCode);
     }
 
-    private String generateIBAN(String country, String bankName){
+    private String generateIBAN(String country, String bankCode){
         String iban = "";
 
         String checkDigits = Utils.generateNumbers(2);
@@ -19,7 +19,7 @@ public class IBAN {
         String BBAN3 = Utils.generateNumbers(4);
         String BBAN4 = Utils.generateNumbers(4);
 
-        iban = country + checkDigits + " " + bankName +
+        iban = country + checkDigits + " " + bankCode +
                 " " + BBAN1 + " " + BBAN2 + " " + BBAN3 + " " + BBAN4;
         return iban;
     }
