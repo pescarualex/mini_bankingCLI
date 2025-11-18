@@ -4,22 +4,16 @@ package model;
 import utils.Utils;
 
 public class Account {
-    private int ID;
+    private final String ID;
     private IBAN iban;
     private Card card;
 
 
-    public Account(){
-        this.ID = Integer.parseInt(Utils.generateNumbers(8));
+    public Account(String bankCode){
+        this.ID = bankCode + Utils.generateNumbers(8);
     }
 
-
-
-
-
-
-
-    public int getID() {
+    public String getID() {
         return ID;
     }
 

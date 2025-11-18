@@ -3,6 +3,8 @@ package model;
 public class Client {
     private String firstName;
     private String lastName;
+    private String CNP;
+    private String seriesAndNumberOfCI;
     private String username;
     private Account account;
 
@@ -22,9 +24,26 @@ public class Client {
         this.lastName = lastName;
     }
 
+    public String getCNP() {
+        return CNP;
+    }
+
+    public void setCNP(String CNP) {
+        this.CNP = CNP;
+    }
+
+    public String getSeriesAndNumberOfCI() {
+        return seriesAndNumberOfCI;
+    }
+
+    public void setSeriesAndNumberOfCI(String seriesAndNumberOfCI) {
+        this.seriesAndNumberOfCI = seriesAndNumberOfCI;
+    }
+
     public String getUsername(){
         return username;
     }
+
     public void setUsername(String firstName, String lastName){
         this.username = firstName + " " + lastName;
     }
