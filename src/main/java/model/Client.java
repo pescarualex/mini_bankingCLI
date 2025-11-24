@@ -40,11 +40,11 @@ public class Client {
         this.seriesAndNumberOfCI = seriesAndNumberOfCI;
     }
 
-    public String getUsername(){
+    public String getUsername() {
         return username;
     }
 
-    public void setUsername(String firstName, String lastName){
+    public void setUsername(String firstName, String lastName) {
         this.username = firstName + " " + lastName;
     }
 
