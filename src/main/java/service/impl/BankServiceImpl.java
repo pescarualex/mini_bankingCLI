@@ -1,16 +1,31 @@
 package service.impl;
 
-import model.Client;
+import model.Bank;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BankServiceImpl {
 
-    static List<Client> BTclients = new ArrayList<>();
-    static List<Client> BCRclients = new ArrayList<>();
-    static List<Client> INGclients = new ArrayList<>();
-    static List<Client> BRDclients = new ArrayList<>();
+    List<Bank> banks = new ArrayList<>();
+
+    public void addBank(Bank bank){
+        banks.add(bank);
+    }
+
+    public String getBankCode(String ID){
+        String bankCode = "";
+        for (Bank bank : banks) {
+            if (bank.getID().equals(ID)){
+                bankCode = bank.getBankCode();
+                break;
+            }
+        }
+        return bankCode;
+    }
+
+
+
 
 
 

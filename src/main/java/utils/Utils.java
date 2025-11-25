@@ -1,8 +1,5 @@
 package utils;
 
-
-import model.Bank;
-
 import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,7 +11,6 @@ public class Utils {
     private static final SecureRandom secureRandom = new SecureRandom();
     private static final Set<String> numbersGenerated = new HashSet<>();
     private static List<String> logs = new ArrayList<>();
-    public static List<Bank> banks = new ArrayList<>();
 
     public static String generateNumbers(int length) {
         String generatedString = "";
@@ -35,9 +31,6 @@ public class Utils {
         }
     }
 
-    public static void addBank(Bank bank) {
-        banks.add(bank);
-    }
 
     public static void logEntry(String message) {
         String log = LocalDate.now() + " ::: " + message;

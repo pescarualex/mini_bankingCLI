@@ -1,8 +1,11 @@
 package model;
 
+import utils.Utils;
+
 import java.util.List;
 
 public class Bank {
+    private final String ID;
     private final String bankName;
     private final String bankSwift;
     private final String paymentNetwork;
@@ -12,10 +15,15 @@ public class Bank {
 
     public Bank(String bankName, String bankSwift,
                 String bankCode, String paymentNetwork) {
+        this.ID = Utils.generateNumbers(5);
         this.bankName = bankName;
         this.bankSwift = bankSwift;
         this.bankCode = bankCode;
         this.paymentNetwork = paymentNetwork;
+    }
+
+    public String getID() {
+        return ID;
     }
 
     public String getBankName() {

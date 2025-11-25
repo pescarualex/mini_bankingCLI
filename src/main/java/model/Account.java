@@ -5,6 +5,8 @@ import utils.Utils;
 
 public class Account {
     private final String ID;
+
+    /// add deposit, money, transfer, etc
     private IBAN iban;
     private Card card;
 
