@@ -1,88 +1,141 @@
 package service.impl;
 
 
+import exceptions.CounterExceededException;
 import utils.Utils;
 
+import java.math.BigInteger;
 import java.util.*;
 
 public class IBANServiceImpl {
-    private final Set<String> UNIQUE_IBANs = new HashSet<>();
+    private static final Set<String> UNIQUE_IBANs = new HashSet<>();
     static BankServiceImpl bankService = new BankServiceImpl();
+    static String finalIban;
 
-    //24 digits
-    public static String generateIBAN(String bankID) {
-        String iban = "";
+    public static String generateIBAN(String bankID) throws CounterExceededException {
+        final Map<String, Integer> MAP_VALUES = getStringIntegerMap();
 
-        Map<Character, Integer> mapvalues = new HashMap<>();
-        mapvalues.put('A', 10);
-        mapvalues.put('B', 11);
-        mapvalues.put('C', 12);
-        mapvalues.put('D', 13);
-        mapvalues.put('E', 14);
-        mapvalues.put('F', 15);
-        mapvalues.put('G', 16);
-        mapvalues.put('H', 17);
-        mapvalues.put('I', 18);
-        mapvalues.put('J', 19);
-        mapvalues.put('K', 20);
-        mapvalues.put('L', 21);
-        mapvalues.put('M', 22);
-        mapvalues.put('N', 23);
-        mapvalues.put('O', 24);
-        mapvalues.put('P', 25);
-        mapvalues.put('Q', 26);
-        mapvalues.put('R', 27);
-        mapvalues.put('S', 28);
-        mapvalues.put('T', 29);
-        mapvalues.put('U', 30);
-        mapvalues.put('V', 31);
-        mapvalues.put('W', 32);
-        mapvalues.put('X', 33);
-        mapvalues.put('Y', 34);
-        mapvalues.put('Z', 35);
+        int counter = 0;
+        while (counter < 5) {
+            String countryCode = "RO";
+            String checksum = "00";
+            String bankCode = "BTRO"; //bankService.getBankCode(bankID);
+            StringBuilder bankIdentificationCode = new StringBuilder(counter + Utils.generateNumbers(3));
+            StringBuilder uniqueNrOfAccount = new StringBuilder(Utils.generateNumbers(16));
 
-        String countryCode = "RO";
-        String checksum = Utils.generateNumbers(2);
-        String bankCode = "BTRO"; //bankService.getBankCode(bankID);
-        String counterToString = Utils.generateNumbers(4);
-        String uniqueNrOfAccount = Utils.generateNumbers(12);
+            while(uniqueNrOfAccount.length() < 16){
+                uniqueNrOfAccount.insert(0, "0");
+            }
 
-        iban = countryCode + checksum + bankCode + counterToString + uniqueNrOfAccount;
-        String ibanForModAlg = bankCode + counterToString + uniqueNrOfAccount + countryCode + checksum;
+            StringBuilder initialIBAN = new StringBuilder();
+            initialIBAN.append(bankCode);
+            initialIBAN.append(bankIdentificationCode);
+            initialIBAN.append(uniqueNrOfAccount);
+            initialIBAN.append(countryCode);
+            initialIBAN.append(checksum);
 
-        char[] ibanToChar = ibanForModAlg.toCharArray();
+            StringBuilder ibanOnlyNumbers = new StringBuilder();
 
-        String ibanOnlyNumbers = "";
+            // for each letter from iban, assigning a number value
+            for (char ch : initialIBAN.toString().toCharArray()) {
+                getString(MAP_VALUES, ibanOnlyNumbers, ch);
+            }
+            int reminder = 0;
 
-        List<Integer> listOfNumbersFromLetters = new ArrayList<>();
+            // calculate the % of the iban and save the reminder
+            BigInteger bigIntegerIbanNumbers = new BigInteger(ibanOnlyNumbers.toString());
+            BigInteger mod = bigIntegerIbanNumbers.mod(BigInteger.valueOf(97));
+            reminder = Integer.parseInt(String.valueOf(mod));
 
+            String check = "";
 
-        for (char ch : ibanToChar) {
-            String s = String.valueOf(ch);
-            Integer i;
-            if (s.matches("[A-Z]")) {
-                i = mapvalues.get(ch);
-                ibanOnlyNumbers = ibanOnlyNumbers + i;
-                listOfNumbersFromLetters.add(i);
+            // last check before building the iban
+            check = String.valueOf(98 - reminder);
+            int checkToInteger = Integer.parseInt(check);
+            if (checkToInteger < 10) {
+                check = "0" + check;
+            }
+
+            /// Final check if entire iban after checksum is generated % 97 == 1 to ensure validity
+            StringBuilder candidateIban = new StringBuilder();
+            candidateIban.append(bankCode);
+            candidateIban.append(bankIdentificationCode);
+            candidateIban.append(uniqueNrOfAccount);
+            candidateIban.append(countryCode);
+            candidateIban.append(check);
+            StringBuilder ibanOnlyNumbersFinalCheck = new StringBuilder();
+            for (char ch : candidateIban.toString().toCharArray()) {
+                getString(MAP_VALUES, ibanOnlyNumbersFinalCheck, ch);
+            }
+            BigInteger bigIntegerFinalCheck = new BigInteger(ibanOnlyNumbersFinalCheck.toString());
+            BigInteger result = bigIntegerFinalCheck.mod(BigInteger.valueOf(97));
+            int i = Integer.parseInt(result.toString());
+            if (i == 1) {
+                finalIban = countryCode + check + bankCode + bankIdentificationCode + uniqueNrOfAccount;
+                if (UNIQUE_IBANs.add(finalIban)) {
+                    System.out.println("REMINDER :::::: " + reminder);
+                    return finalIban;
+                }
             } else {
-                ibanOnlyNumbers = ibanOnlyNumbers + ch;
-
+                counter++;
             }
         }
 
+        if(counter == 5) {
+            throw new CounterExceededException(counter);
+        } else {
+            throw new IllegalArgumentException("Verification of IBAN may be innacurate. Try again!");
+        }
+    }
 
+    // convert letters to number. Each letter correspond to a number from MAP_VALUES
+    private static StringBuilder getString(Map<String, Integer> MAP_VALUES, StringBuilder ibanOnlyNumbers, char ch) {
+        String charToString = String.valueOf(ch);
+        String upperCase = charToString.toUpperCase();
+        Integer i;
+        if (upperCase.matches("[A-Z]")) {
+            i = MAP_VALUES.get(upperCase);
+            ibanOnlyNumbers.append(i);
+        } else {
+            ibanOnlyNumbers.append(ch);
+        }
+        return ibanOnlyNumbers;
+    }
 
-
-
-
-        return iban;
+    // map each letter to corresponded number
+    private static Map<String, Integer> getStringIntegerMap() {
+        final Map<String, Integer> MAP_VALUES = new HashMap<>();
+        MAP_VALUES.put("A", 10);
+        MAP_VALUES.put("B", 11);
+        MAP_VALUES.put("C", 12);
+        MAP_VALUES.put("D", 13);
+        MAP_VALUES.put("E", 14);
+        MAP_VALUES.put("F", 15);
+        MAP_VALUES.put("G", 16);
+        MAP_VALUES.put("H", 17);
+        MAP_VALUES.put("I", 18);
+        MAP_VALUES.put("J", 19);
+        MAP_VALUES.put("K", 20);
+        MAP_VALUES.put("L", 21);
+        MAP_VALUES.put("M", 22);
+        MAP_VALUES.put("N", 23);
+        MAP_VALUES.put("O", 24);
+        MAP_VALUES.put("P", 25);
+        MAP_VALUES.put("Q", 26);
+        MAP_VALUES.put("R", 27);
+        MAP_VALUES.put("S", 28);
+        MAP_VALUES.put("T", 29);
+        MAP_VALUES.put("U", 30);
+        MAP_VALUES.put("V", 31);
+        MAP_VALUES.put("W", 32);
+        MAP_VALUES.put("X", 33);
+        MAP_VALUES.put("Y", 34);
+        MAP_VALUES.put("Z", 35);
+        return MAP_VALUES;
     }
 
 
-    public static void main(String[] args) {
-//        char ch = 'b';
-//        int pos = ch - 'a' + 10;
-//        System.out.println(pos);
+    public static void main(String[] args) throws CounterExceededException {
         System.out.println(generateIBAN("BTRO"));
 
     }
