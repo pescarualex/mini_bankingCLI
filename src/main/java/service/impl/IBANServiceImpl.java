@@ -9,18 +9,18 @@ import java.util.*;
 
 public class IBANServiceImpl {
     private static final Set<String> UNIQUE_IBANs = new HashSet<>();
-    static BankServiceImpl bankService = new BankServiceImpl();
-    static String finalIban;
+    private final BankServiceImpl bankService = new BankServiceImpl();
 
-    public static String generateIBAN(String bankID) throws CounterExceededException {
+    public String generateIBAN(String bankID) throws CounterExceededException {
         final Map<String, Integer> MAP_VALUES = getStringIntegerMap();
 
         int counter = 0;
+        int uniqueCounter = 0;
         while (counter < 5) {
             String countryCode = "RO";
             String checksum = "00";
-            String bankCode = "BTRO"; //bankService.getBankCode(bankID);
-            StringBuilder bankIdentificationCode = new StringBuilder(counter + Utils.generateNumbers(3));
+            String bankCode = bankService.getBankCode(bankID);
+            StringBuilder bankIdentificationCode = new StringBuilder(uniqueCounter + Utils.generateNumbers(3));
             StringBuilder uniqueNrOfAccount = new StringBuilder(Utils.generateNumbers(16));
 
             while(uniqueNrOfAccount.length() < 16){
@@ -71,10 +71,11 @@ public class IBANServiceImpl {
             BigInteger result = bigIntegerFinalCheck.mod(BigInteger.valueOf(97));
             int i = Integer.parseInt(result.toString());
             if (i == 1) {
-                finalIban = countryCode + check + bankCode + bankIdentificationCode + uniqueNrOfAccount;
+                String finalIban = countryCode + check + bankCode + bankIdentificationCode + uniqueNrOfAccount;
                 if (UNIQUE_IBANs.add(finalIban)) {
-                    System.out.println("REMINDER :::::: " + reminder);
                     return finalIban;
+                } else {
+                    uniqueCounter++;
                 }
             } else {
                 counter++;
@@ -84,12 +85,12 @@ public class IBANServiceImpl {
         if(counter == 5) {
             throw new CounterExceededException(counter);
         } else {
-            throw new IllegalArgumentException("Verification of IBAN may be innacurate. Try again!");
+            throw new IllegalArgumentException("Verification of IBAN may be inaccurate. Try again!");
         }
     }
 
     // convert letters to number. Each letter correspond to a number from MAP_VALUES
-    private static StringBuilder getString(Map<String, Integer> MAP_VALUES, StringBuilder ibanOnlyNumbers, char ch) {
+    private StringBuilder getString(Map<String, Integer> MAP_VALUES, StringBuilder ibanOnlyNumbers, char ch) {
         String charToString = String.valueOf(ch);
         String upperCase = charToString.toUpperCase();
         Integer i;
@@ -103,7 +104,7 @@ public class IBANServiceImpl {
     }
 
     // map each letter to corresponded number
-    private static Map<String, Integer> getStringIntegerMap() {
+    private Map<String, Integer> getStringIntegerMap() {
         final Map<String, Integer> MAP_VALUES = new HashMap<>();
         MAP_VALUES.put("A", 10);
         MAP_VALUES.put("B", 11);
@@ -132,12 +133,6 @@ public class IBANServiceImpl {
         MAP_VALUES.put("Y", 34);
         MAP_VALUES.put("Z", 35);
         return MAP_VALUES;
-    }
-
-
-    public static void main(String[] args) throws CounterExceededException {
-        System.out.println(generateIBAN("BTRO"));
-
     }
 
 

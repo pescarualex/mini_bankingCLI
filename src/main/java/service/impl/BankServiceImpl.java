@@ -7,18 +7,20 @@ import java.util.List;
 
 public class BankServiceImpl {
 
-    List<Bank> banks = new ArrayList<>();
+    private final static List<Bank> BANKS = new ArrayList<>();
 
     public void addBank(Bank bank){
-        banks.add(bank);
+        BANKS.add(bank);
     }
 
     public String getBankCode(String ID){
         String bankCode = "";
-        for (Bank bank : banks) {
-            if (bank.getID().equals(ID)){
+        for (Bank bank : BANKS) {
+            if (ID.equals(bank.getID())) {
                 bankCode = bank.getBankCode();
                 break;
+            } else {
+                System.out.println("No bank with ID: " + ID + " found.");
             }
         }
         return bankCode;
