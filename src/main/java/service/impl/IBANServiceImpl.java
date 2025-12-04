@@ -39,7 +39,7 @@ public class IBANServiceImpl {
 
             // for each letter from iban, assigning a number value
             for (char ch : initialIBAN.toString().toCharArray()) {
-                getString(MAP_VALUES, ibanOnlyNumbers, ch);
+                convertLetterToNumber(MAP_VALUES, ibanOnlyNumbers, ch);
             }
             int reminder = 0;
 
@@ -57,8 +57,15 @@ public class IBANServiceImpl {
                 check = "0" + check;
             }
 
+            StringBuilder ibanToCheck = new StringBuilder();
+            ibanToCheck.append(bankCode);
+            ibanToCheck.append(bankIdentificationCode);
+            ibanToCheck.append(uniqueNrOfAccount);
+            ibanToCheck.append(countryCode);
+            ibanToCheck.append(check);
 
-            int i = checkValidityOfIBANGenerated(bankCode, bankIdentificationCode, uniqueNrOfAccount, countryCode, check);
+            int i = checkValidityOfIBAN(ibanToCheck);
+
             if (i == 1) {
                 String finalIban = countryCode + check + bankCode + bankIdentificationCode + uniqueNrOfAccount;
                 if (UNIQUE_IBANs.add(finalIban)) {
@@ -79,20 +86,13 @@ public class IBANServiceImpl {
     }
 
 
-    public int checkValidityOfIBANGenerated(String bankCode, StringBuilder bankIdentificationCode, StringBuilder uniqueNrOfAccount
-    , String countryCode, String check) {
+    public int checkValidityOfIBAN(StringBuilder ibanToCheck) {
         /// Final check if entire iban after checksum is generated % 97 == 1 to ensure validity
-        StringBuilder candidateIban = new StringBuilder();
-        candidateIban.append(bankCode);
-        candidateIban.append(bankIdentificationCode);
-        candidateIban.append(uniqueNrOfAccount);
-        candidateIban.append(countryCode);
-        candidateIban.append(check);
-        StringBuilder ibanOnlyNumbersFinalCheck = new StringBuilder();
-        for (char ch : candidateIban.toString().toCharArray()) {
-            getString(MAP_VALUES, ibanOnlyNumbersFinalCheck, ch);
+        StringBuilder stringBuilder = new StringBuilder();
+        for (char ch : ibanToCheck.toString().toCharArray()) {
+            convertLetterToNumber(MAP_VALUES, stringBuilder, ch);
         }
-        BigInteger bigIntegerFinalCheck = new BigInteger(ibanOnlyNumbersFinalCheck.toString());
+        BigInteger bigIntegerFinalCheck = new BigInteger(stringBuilder.toString());
         BigInteger result = bigIntegerFinalCheck.mod(BigInteger.valueOf(97));
         int i = Integer.parseInt(result.toString());
 
@@ -100,7 +100,7 @@ public class IBANServiceImpl {
     }
 
     // convert letters to number. Each letter correspond to a number from MAP_VALUES
-    private StringBuilder getString(Map<String, Integer> MAP_VALUES, StringBuilder ibanOnlyNumbers, char ch) {
+    private StringBuilder convertLetterToNumber(Map<String, Integer> MAP_VALUES, StringBuilder ibanOnlyNumbers, char ch) {
         String charToString = String.valueOf(ch);
         String upperCase = charToString.toUpperCase();
         Integer i;
