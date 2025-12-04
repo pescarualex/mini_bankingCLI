@@ -10,9 +10,10 @@ import java.util.*;
 public class IBANServiceImpl {
     private static final Set<String> UNIQUE_IBANs = new HashSet<>();
     private final BankServiceImpl bankService = new BankServiceImpl();
+    private static Map<String, Integer> MAP_VALUES;
 
     public String generateIBAN(String bankID) throws CounterExceededException {
-        final Map<String, Integer> MAP_VALUES = getStringIntegerMap();
+        MAP_VALUES = getStringIntegerMap();
 
         int counter = 0;
         int uniqueCounter = 0;
@@ -56,20 +57,8 @@ public class IBANServiceImpl {
                 check = "0" + check;
             }
 
-            /// Final check if entire iban after checksum is generated % 97 == 1 to ensure validity
-            StringBuilder candidateIban = new StringBuilder();
-            candidateIban.append(bankCode);
-            candidateIban.append(bankIdentificationCode);
-            candidateIban.append(uniqueNrOfAccount);
-            candidateIban.append(countryCode);
-            candidateIban.append(check);
-            StringBuilder ibanOnlyNumbersFinalCheck = new StringBuilder();
-            for (char ch : candidateIban.toString().toCharArray()) {
-                getString(MAP_VALUES, ibanOnlyNumbersFinalCheck, ch);
-            }
-            BigInteger bigIntegerFinalCheck = new BigInteger(ibanOnlyNumbersFinalCheck.toString());
-            BigInteger result = bigIntegerFinalCheck.mod(BigInteger.valueOf(97));
-            int i = Integer.parseInt(result.toString());
+
+            int i = checkValidityOfIBANGenerated(bankCode, bankIdentificationCode, uniqueNrOfAccount, countryCode, check);
             if (i == 1) {
                 String finalIban = countryCode + check + bankCode + bankIdentificationCode + uniqueNrOfAccount;
                 if (UNIQUE_IBANs.add(finalIban)) {
@@ -87,6 +76,27 @@ public class IBANServiceImpl {
         } else {
             throw new IllegalArgumentException("Verification of IBAN may be inaccurate. Try again!");
         }
+    }
+
+
+    public int checkValidityOfIBANGenerated(String bankCode, StringBuilder bankIdentificationCode, StringBuilder uniqueNrOfAccount
+    , String countryCode, String check) {
+        /// Final check if entire iban after checksum is generated % 97 == 1 to ensure validity
+        StringBuilder candidateIban = new StringBuilder();
+        candidateIban.append(bankCode);
+        candidateIban.append(bankIdentificationCode);
+        candidateIban.append(uniqueNrOfAccount);
+        candidateIban.append(countryCode);
+        candidateIban.append(check);
+        StringBuilder ibanOnlyNumbersFinalCheck = new StringBuilder();
+        for (char ch : candidateIban.toString().toCharArray()) {
+            getString(MAP_VALUES, ibanOnlyNumbersFinalCheck, ch);
+        }
+        BigInteger bigIntegerFinalCheck = new BigInteger(ibanOnlyNumbersFinalCheck.toString());
+        BigInteger result = bigIntegerFinalCheck.mod(BigInteger.valueOf(97));
+        int i = Integer.parseInt(result.toString());
+
+        return i;
     }
 
     // convert letters to number. Each letter correspond to a number from MAP_VALUES
