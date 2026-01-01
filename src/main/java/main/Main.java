@@ -23,7 +23,7 @@ public class Main {
         while(true){
             System.out.println("\tWelcome!");
             System.out.println("1. New client?\n" +
-                    "2. Have and account already.");
+                    "2. Have an account already.");
             int choise = scanner.nextInt();
             switch(choise){
                 case 1: createNewClient(); break;
