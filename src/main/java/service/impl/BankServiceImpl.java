@@ -13,17 +13,30 @@ public class BankServiceImpl {
         BANKS.add(bank);
     }
 
-    public String getBankCode(String ID){
+    public String getBankCode(String bankID){
         String bankCode = "";
         for (Bank bank : BANKS) {
-            if (ID.equals(bank.getID())) {
+            if (bankID.equals(bank.getID())) {
                 bankCode = bank.getBankCode();
                 break;
             } else {
-                System.out.println("No bank with ID: " + ID + " found.");
+                System.out.println("No bank with ID: " + bankID + " found.");
             }
         }
         return bankCode;
+    }
+
+    public String getPaymentNetwork(String bankID){
+        String paymentNetwork = "";
+        for (Bank bank : BANKS) {
+            if (bankID.equals(bank.getID())) {
+                paymentNetwork = bank.getPaymentNetwork();
+                break;
+            } else {
+                System.out.println("No bank with ID: " + bankID + " found.");
+            }
+        }
+        return paymentNetwork;
     }
 
 
