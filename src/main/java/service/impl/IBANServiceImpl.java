@@ -12,13 +12,13 @@ public class IBANServiceImpl {
     private final BankServiceImpl bankService = new BankServiceImpl();
     private static Map<String, Integer> MAP_VALUES;
 
-    public String generateIBAN(String bankID) throws CounterExceededException {
+    public String generateIBAN(String countryCode, String bankID) throws CounterExceededException {
         MAP_VALUES = getStringIntegerMap();
 
         int counter = 0;
         int uniqueCounter = 0;
         while (counter < 5) {
-            String countryCode = "RO";
+            countryCode = "RO";
             String checksum = "00";
             String bankCode = bankService.getBankCode(bankID);
             StringBuilder bankIdentificationCode = new StringBuilder(uniqueCounter + Utils.generateNumbers(3));
@@ -144,6 +144,5 @@ public class IBANServiceImpl {
         MAP_VALUES.put("Z", 35);
         return MAP_VALUES;
     }
-
 
 }
