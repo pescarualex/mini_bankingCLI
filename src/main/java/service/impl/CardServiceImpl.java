@@ -1,10 +1,9 @@
 package service.impl;
 
 import model.Bank;
-import model.Card;
 import utils.Utils;
 
-import java.math.BigInteger;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,7 +14,7 @@ public class CardServiceImpl {
 
 
     /// first digit identifies the Visa or Mastercard
-    private String generateCardNumber(String bankID){
+    public String generateCardNumber(String bankID){
         StringBuilder initialCardNumber = new StringBuilder();
         StringBuilder cardNumberProcessed = new StringBuilder();
 
@@ -61,8 +60,8 @@ public class CardServiceImpl {
             sumOfCharactersFromCardNumber += i1;
         }
 
-        // generate the last digit by ceching if the sum is multiple of 10,
-        // if not, substract from 10 the reminder of sum
+        // generate the last digit by checking if the sum is multiple of 10,
+        // if not, subtract from 10 the reminder of sum
         int checkDigit = 0;
         if((sumOfCharactersFromCardNumber + checkDigit) % 10 != 0){
             checkDigit = 10 - (sumOfCharactersFromCardNumber % 10);
@@ -79,24 +78,17 @@ public class CardServiceImpl {
     }
 
 
-    public static void main(String[] args) {
-        Bank BT = new Bank("BT", "BTRL20", "BTRO", "Mastercard");
-        BankServiceImpl bankService = new BankServiceImpl();
-        bankService.addBank(BT);
-
-        CardServiceImpl cardService = new CardServiceImpl();
-        System.out.println(cardService.generateCardNumber(BT.getID()));
-
+    public String generatePinCode(){
+        return Utils.generateNumbers(4);
     }
 
-    private String generatePinCode(){
-        String pin_code = Utils.generateNumbers(4);
-        return pin_code;
+    public String generateCVV(){
+        return Utils.generateNumbers(3);
     }
 
-    private String generateCVV(){
-        String CVV = Utils.generateNumbers(3);
-        return CVV;
+    public LocalDate getCardExpirationDate(){
+        LocalDate date = LocalDate.now();
+        return date.plusYears(5L);
     }
 
 }
