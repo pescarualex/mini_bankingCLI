@@ -12,14 +12,7 @@ import java.util.Scanner;
 public class ClientServiceIImpl {
 
     AccountServiceImpl accountService = new AccountServiceImpl();
-
-    static List<Client> BTclients = new ArrayList<>();
-    static List<Client> BCRclients = new ArrayList<>();
-    static List<Client> INGclients = new ArrayList<>();
-    static List<Client> BRDclients = new ArrayList<>();
-
     Scanner scanner = new Scanner(System.in);
-
 
     public Client createClient(String bankID) throws CounterExceededException {
         Client client = new Client();
