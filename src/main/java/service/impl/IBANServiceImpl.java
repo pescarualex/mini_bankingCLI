@@ -18,7 +18,6 @@ public class IBANServiceImpl {
         int counter = 0;
         int uniqueCounter = 0;
         while (counter < 5) {
-            countryCode = "RO";
             String checksum = "00";
             String bankCode = bankService.getBankCode(bankID);
             StringBuilder bankIdentificationCode = new StringBuilder(uniqueCounter + Utils.generateNumbers(3));

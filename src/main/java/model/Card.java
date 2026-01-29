@@ -14,16 +14,32 @@ public class Card {
         return cardNumber;
     }
 
+    public void setCardNumber(String cardNumber){
+        this.cardNumber = cardNumber;
+    }
+
     public String getPinCode(){
         return pin_code;
+    }
+
+    public void setPinCode(String pinCode) {
+        this.pin_code = pinCode;
     }
 
     public LocalDate getExpirationDate(){
         return expirationDate;
     }
 
+    public void setExpirationDate(LocalDate expirationDate){
+        this.expirationDate = expirationDate;
+    }
+
     public String getCVV(){
         return CVV;
+    }
+
+    public void setCVV(String CVV){
+        this.CVV = CVV;
     }
 
     @Override

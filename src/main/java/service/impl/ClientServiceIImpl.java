@@ -1,5 +1,6 @@
 package service.impl;
 
+import exceptions.CounterExceededException;
 import model.Account;
 import model.Client;
 import utils.Utils;
@@ -20,7 +21,7 @@ public class ClientServiceIImpl {
     Scanner scanner = new Scanner(System.in);
 
 
-    public Client createClient(String bankID){
+    public Client createClient(String bankID) throws CounterExceededException {
         Client client = new Client();
 
         System.out.println("Enter first name: ");

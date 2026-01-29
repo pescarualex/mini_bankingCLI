@@ -8,6 +8,10 @@ public class IBAN {
         return IBAN;
     }
 
+    public void setIBAN(String IBAN){
+        this.IBAN = IBAN;
+    }
+
     @Override
     public String toString() {
         return "IBAN{" +
