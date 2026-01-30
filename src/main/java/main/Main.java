@@ -88,39 +88,98 @@ public class Main {
     }
 
     public static void alreadyExistingAccountMenu() {
-
         System.out.println("To continue, enter the pin code:");
+        boolean pinCodeValid = isPinCodeValid();
+
+        if(pinCodeValid) {
+            System.out.println("Welcome, " + client.getFirstName() + " " + client.getLastName());
+
+            System.out.println();
+            System.out.println("1. View IBAN");
+            System.out.println("2. View Card Information");
+            System.out.println("3. Deposit Money");
+            System.out.println("4. Withdraw Money");
+            System.out.println("5. Transfer Money");
+            System.out.println("0. Exit");
+
+            int choise = scanner.nextInt();
+
+            switch (choise) {
+                case 1:
+                    viewClientIban();
+                    break;
+                case 2:
+                    viewClientCardInformation();
+                    break;
+                case 3:
+                    depositMoney();
+                    break;
+                case 4:
+                    withdrawMoney();
+                    break;
+                case 5:
+                    transferMoney();
+                    break;
+                case 0:
+                    System.exit(0);
+                default:
+                    System.out.println("Invalid choose. Try again.");
+            }
+        } else {
+            System.out.println("Pin Code invalid!");
+        }
+    }
+
+    private static void transferMoney() {
+    }
+
+    private static void withdrawMoney() {
+        
+    }
+
+    private static void depositMoney() {
+        
+    }
+
+    private static void viewClientCardInformation() {
+        
+    }
+
+
+    public static void viewClientIban(){
+        String iban = client.getAccount().getIban().getIBAN();
+        char[] charArray = iban.toCharArray();
+
+        for (int i = 0; i < 8; i++){
+            System.out.print(charArray[i]);
+        }
+        for(int i = 8; i < charArray.length; i++){
+            System.out.print("*");
+        }
+
+        System.out.println("\nTo see the entire IBAN, please enter the Pin Code:");
+        boolean pinCodeValid = isPinCodeValid();
+
+        if(pinCodeValid){
+            System.out.println(iban);
+        } else {
+            System.out.println("Pin Code invalid.");
+        }
+    }
+
+    public static boolean isPinCodeValid(){
+        boolean isValid = false;
         String pinCode = scanner.next();
         scanner.nextLine();
 
         if(!pinCode.equals(client.getAccount().getCard().getPinCode())){
             System.out.println("Incorect Pin Code. Please try again!");
             System.exit(0);
-        } {
-            System.out.println("Welcome, " + client.getFirstName() + " " + client.getLastName());
+        } else {
+            isValid = true;
         }
 
-
-        System.out.println();
-        System.out.println("1. View IBAN");
-        System.out.println("2. View Card Information");
-        System.out.println("3. Deposit Money");
-        System.out.println("4. Withdraw Money");
-        System.out.println("5. Transfer Money");
-        System.out.println("0. Exit");
-
-        int choise = scanner.nextInt();
-
-        switch(choise){
-            case 1: viewClientIban(); break;
-            case 2: viewClientCardInformation(); break;
-            case 3: depositMoney(); break;
-            case 4: withdrawMoney(); break;
-            case 5: transferMoney(); break;
-            case 0: System.exit(0);
-            default:
-                System.out.println("Invalid choose. Try again.");
-        }
+        return isValid;
     }
 
 
