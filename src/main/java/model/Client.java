@@ -1,12 +1,20 @@
 package model;
 
 public class Client {
+    private int id;
     private String firstName;
     private String lastName;
     private String CNP;
     private String seriesAndNumberOfCI;
     private String username;
-    private Account account;
+
+    public int getId(){
+        return id;
+    }
+
+    public void setId(int id){
+        this.id = id;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -48,13 +56,6 @@ public class Client {
         this.username = firstName + " " + lastName;
     }
 
-    public Account getAccount() {
-        return account;
-    }
-
-    public void setAccount(Account account) {
-        this.account = account;
-    }
 
     @Override
     public String toString() {

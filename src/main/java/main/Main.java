@@ -2,6 +2,7 @@ package main;
 
 import exceptions.CounterExceededException;
 import model.*;
+import service.impl.AccountServiceImpl;
 import service.impl.BankServiceImpl;
 import service.impl.ClientServiceIImpl;
 import utils.Utils;
@@ -16,6 +17,7 @@ public class Main {
 
     static ClientServiceIImpl clientService = new ClientServiceIImpl();
     static BankServiceImpl bankService = new BankServiceImpl();
+    static AccountServiceImpl accountService = new AccountServiceImpl();
 
     final static Bank BT = new Bank("BT", "BTRL20", "BTRO", "Visa");
     final static Bank BCR = new Bank("BCR", "BCR20", "BCRO", "Mastercard");
@@ -60,6 +62,8 @@ public class Main {
                 bankService.addBank(BT);
                 Utils.logEntry("Account created at bank: " + BT.getBankName());
                 client = clientService.createClient(BT.getID());
+                Account account = accountService.createAccount(BT.getID());
+                account.setClient_ID(client.getId());
                 BTclients.add(client);
                 Utils.logEntry("Client: " + client.getFirstName() + " " + client.getLastName() +
                         "added to bank: " + BT.getBankName());
@@ -103,9 +107,10 @@ public class Main {
             System.out.println();
             System.out.println("1. View IBAN");
             System.out.println("2. View Card Information");
-            System.out.println("3. Deposit Money");
-            System.out.println("4. Withdraw Money");
-            System.out.println("5. Transfer Money");
+            System.out.println("3. See current balance");
+            System.out.println("4. Deposit Money");
+            System.out.println("5. Withdraw Money");
+            System.out.println("6. Transfer Money");
             System.out.println("0. Exit");
 
             int choise = scanner.nextInt();
@@ -117,13 +122,14 @@ public class Main {
                 case 2:
                     viewClientCardInformation();
                     break;
-                case 3:
+                case 3: seeCurrentBalance(); break;
+                case 4:
                     depositMoney();
                     break;
-                case 4:
+                case 5:
                     withdrawMoney();
                     break;
-                case 5:
+                case 6:
                     transferMoney();
                     break;
                 case 0:
@@ -137,6 +143,14 @@ public class Main {
     }
 
     private static void transferMoney() {
+
+    }
+
+
+
+    private static void seeCurrentBalance() {
+        long amountOfMoney = client.getAccount().getAmountOfMoney();
+        System.out.println("Your current balance is: " + amountOfMoney + " RON");
     }
 
     private static void withdrawMoney() {
@@ -147,7 +161,7 @@ public class Main {
             long newAmountOfMoney = client.getAccount().getAmountOfMoney() - money;
             client.getAccount().setAmountOfMoney(newAmountOfMoney);
 
-            System.out.println("Now, you have: " + client.getAccount().getAmountOfMoney() + "RON");
+            System.out.println("Now, you have: " + client.getAccount().getAmountOfMoney() + " RON");
         } else {
             System.out.println("Sorry, you do not have that amount of money in your account.");
         }
@@ -160,7 +174,7 @@ public class Main {
         long newAmountOfMoney = client.getAccount().getAmountOfMoney() + money;
         client.getAccount().setAmountOfMoney(newAmountOfMoney);
 
-        System.out.println("Now, you have: " + client.getAccount().getAmountOfMoney() + "RON");
+        System.out.println("Now, you have: " + client.getAccount().getAmountOfMoney() + " RON");
     }
 
     private static void viewClientCardInformation() {
@@ -179,7 +193,6 @@ public class Main {
             System.out.println("Pin code invalid.");
         }
     }
-
 
     public static void viewClientIban(){
         String iban = client.getAccount().getIban().getIBAN();

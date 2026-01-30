@@ -33,19 +33,8 @@ public class ClientServiceIImpl {
         String seriesAndNumberOfCI = scanner.nextLine();
         client.setSeriesAndNumberOfCI(seriesAndNumberOfCI);
 
-        Account account = accountService.createAccount(bankID);
 
-        System.out.println("Account created for: " + client.getLastName() + " " + client.getFirstName());
-        System.out.println("Here is the IBAN: " + account.getIban().getIBAN());
-        System.out.println("Here is the Card number: " + account.getCard().getCardNumber());
-        System.out.println("Here is the Pin code for card: " + account.getCard().getPinCode());
-
-        client.setAccount(account);
-
-        Utils.logEntry("\t-> First Name: " + client.getFirstName() + ", Last Name: " + client.getLastName() + "\n"
-                + "\t-> Account ID: " + client.getAccount().getID() + ", created for: " + client.getUsername() + ", "
-                + "with IBAN: " + client.getAccount().getIban().getIBAN() + ", and Card no.: " +
-                client.getAccount().getCard().getCardNumber());
+        Utils.logEntry("First Name: " + client.getFirstName() + ", Last Name: " + client.getLastName());
 
         return client;
     }

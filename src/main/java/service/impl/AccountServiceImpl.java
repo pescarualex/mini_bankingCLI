@@ -14,7 +14,6 @@ public class AccountServiceImpl {
     public Account createAccount(String bankID) throws CounterExceededException {
         String bankCode = bankService.getBankCode(bankID);
 
-
         Card card = new Card();
         card.setCardNumber(cardService.generateCardNumber(bankID));
         card.setPinCode(cardService.generatePinCode());
