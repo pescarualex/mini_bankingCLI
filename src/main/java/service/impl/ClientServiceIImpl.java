@@ -35,6 +35,11 @@ public class ClientServiceIImpl {
 
         Account account = accountService.createAccount(bankID);
 
+        System.out.println("Account created for: " + client.getLastName() + " " + client.getFirstName());
+        System.out.println("Here is the IBAN: " + account.getIban().getIBAN());
+        System.out.println("Here is the Card number: " + account.getCard().getCardNumber());
+        System.out.println("Here is the Pin code for card: " + account.getCard().getPinCode());
+
         client.setAccount(account);
 
         Utils.logEntry("\t-> First Name: " + client.getFirstName() + ", Last Name: " + client.getLastName() + "\n"

@@ -26,6 +26,8 @@ public class Main {
     static List<Client> INGclients = new ArrayList<>();
     static List<Client> BRDclients = new ArrayList<>();
 
+    static Client client;
+
     public static void main(String[] args) throws CounterExceededException {
         while(true){
             System.out.println("\tWelcome!");
@@ -51,33 +53,33 @@ public class Main {
             case 1:
                 bankService.addBank(BT);
                 Utils.logEntry("Account created at bank: " + BT.getBankName());
-                Client clientBT = clientService.createClient(BT.getID());
-                BTclients.add(clientBT);
-                Utils.logEntry("Client: " + clientBT.getFirstName() + " " + clientBT.getLastName() +
+                client = clientService.createClient(BT.getID());
+                BTclients.add(client);
+                Utils.logEntry("Client: " + client.getFirstName() + " " + client.getLastName() +
                         "added to bank: " + BT.getBankName());
                 break;
             case 2:
                 bankService.addBank(BCR);
                 Utils.logEntry("Account created at bank: " + BCR.getBankName());
-                Client clientBCR = clientService.createClient(BCR.getID());
-                BCRclients.add(clientBCR);
-                Utils.logEntry("Client: " + clientBCR.getFirstName() + " " + clientBCR.getLastName() +
+                client = clientService.createClient(BCR.getID());
+                BCRclients.add(client);
+                Utils.logEntry("Client: " + client.getFirstName() + " " + client.getLastName() +
                         "added to bank: " + BCR.getBankName());
                 break;
             case 3:
                 bankService.addBank(ING);
                 Utils.logEntry("Account created at bank: " + ING.getBankName());
-                Client clientING = clientService.createClient(ING.getID());
-                INGclients.add(clientING);
-                Utils.logEntry("Client: " + clientING.getFirstName() + " " + clientING.getLastName() +
+                client = clientService.createClient(ING.getID());
+                INGclients.add(client);
+                Utils.logEntry("Client: " + client.getFirstName() + " " + client.getLastName() +
                         "added to bank: " + ING.getBankName());
                 break;
             case 4:
                 bankService.addBank(BRD);
                 Utils.logEntry("Account created at bank: " + BRD.getBankName());
-                Client clientBRD = clientService.createClient(BRD.getID());
-                BRDclients.add(clientBRD);
-                Utils.logEntry("Client: " + clientBRD.getFirstName() + " " + clientBRD.getLastName() +
+                client = clientService.createClient(BRD.getID());
+                BRDclients.add(client);
+                Utils.logEntry("Client: " + client.getFirstName() + " " + client.getLastName() +
                         "added to bank: " + BRD.getBankName());
                 break;
             default:
@@ -87,6 +89,17 @@ public class Main {
 
     public static void alreadyExistingAccountMenu() {
 
+        System.out.println("To continue, enter the pin code:");
+        String pinCode = scanner.next();
+        scanner.nextLine();
+
+        if(!pinCode.equals(client.getAccount().getCard().getPinCode())){
+            System.out.println("Incorect Pin Code. Please try again!");
+            System.exit(0);
+        } {
+            System.out.println("Welcome, " + client.getFirstName() + " " + client.getLastName());
+        }
+
 
         System.out.println();
         System.out.println("1. View IBAN");
@@ -94,22 +107,20 @@ public class Main {
         System.out.println("3. Deposit Money");
         System.out.println("4. Withdraw Money");
         System.out.println("5. Transfer Money");
+        System.out.println("0. Exit");
 
         int choise = scanner.nextInt();
 
-//        switch(choise){
-//            case 1: viewClientIban(); break;
-//            case 2: viewClientCardInformation(); break;
-//            case 3: depositMoney(); break;
-//            case 4: withdrawMoney(); break;
-//            case 5: transferMoney(); break;
-//            default:
-//                System.out.println("Invalid choose. Try again.");
-//        }
-    }
-
-    public boolean isPinCodeValid(){
-
+        switch(choise){
+            case 1: viewClientIban(); break;
+            case 2: viewClientCardInformation(); break;
+            case 3: depositMoney(); break;
+            case 4: withdrawMoney(); break;
+            case 5: transferMoney(); break;
+            case 0: System.exit(0);
+            default:
+                System.out.println("Invalid choose. Try again.");
+        }
     }
 
 
