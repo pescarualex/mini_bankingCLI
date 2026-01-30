@@ -6,6 +6,7 @@ import service.impl.BankServiceImpl;
 import service.impl.ClientServiceIImpl;
 import utils.Utils;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -32,11 +33,16 @@ public class Main {
         while(true){
             System.out.println("\tWelcome!");
             System.out.println("1. New client?\n" +
-                    "2. Have an account already.");
+                    "2. Have an account already.\n" +
+                    "0. Exit");
+
             int choise = scanner.nextInt();
             switch(choise){
                 case 1: createNewClient(); break;
                 case 2: alreadyExistingAccountMenu(); break;
+                case 0: System.exit(0); break;
+                default:
+                    System.out.println("Invalid option.");
             }
         }
     }
@@ -142,7 +148,20 @@ public class Main {
     }
 
     private static void viewClientCardInformation() {
-        
+        System.out.println("\nTo see the entire Card number, please enter the Pin Code:");
+        boolean pinCodeValid = isPinCodeValid();
+
+        if(pinCodeValid) {
+            String cardNumber = client.getAccount().getCard().getCardNumber();
+            String cvv = client.getAccount().getCard().getCVV();
+            LocalDate expirationDate = client.getAccount().getCard().getExpirationDate();
+
+            System.out.println("Card number: " + cardNumber + "\n" +
+                    "CVV: " + cvv + "\n" +
+                    "Expiration Date: " + expirationDate.toString());
+        } else {
+            System.out.println("Pin code invalid.");
+        }
     }
 
 
