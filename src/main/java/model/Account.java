@@ -5,14 +5,15 @@ import utils.Utils;
 
 public class Account {
     private final String ID;
+    private long amountOfMoney;
 
     /// add deposit, money, transfer, etc
     private IBAN iban;
     private Card card;
 
 
-    public Account(String bankCode){
-        this.ID = bankCode + Utils.generateNumbers(8);
+    public Account(String bankID){
+        this.ID = bankID + Utils.generateNumbers(8);
     }
 
     public String getID() {
@@ -21,6 +22,14 @@ public class Account {
 
     public IBAN getIban() {
         return iban;
+    }
+
+    public long getAmountOfMoney(){
+        return amountOfMoney;
+    }
+
+    public void setAmountOfMoney(long money){
+        this.amountOfMoney = money;
     }
 
     public Card getCard() {

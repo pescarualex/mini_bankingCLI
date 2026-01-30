@@ -140,11 +140,27 @@ public class Main {
     }
 
     private static void withdrawMoney() {
-        
+        System.out.println("Enter the amount of money do you want to withdraw:");
+        long money = scanner.nextLong();
+
+        if(client.getAccount().getAmountOfMoney() > 0 && client.getAccount().getAmountOfMoney() >= money){
+            long newAmountOfMoney = client.getAccount().getAmountOfMoney() - money;
+            client.getAccount().setAmountOfMoney(newAmountOfMoney);
+
+            System.out.println("Now, you have: " + client.getAccount().getAmountOfMoney() + "RON");
+        } else {
+            System.out.println("Sorry, you do not have that amount of money in your account.");
+        }
     }
 
     private static void depositMoney() {
-        
+        System.out.println("Enter the amount of money do you want to deposit:");
+        long money = scanner.nextLong();
+
+        long newAmountOfMoney = client.getAccount().getAmountOfMoney() + money;
+        client.getAccount().setAmountOfMoney(newAmountOfMoney);
+
+        System.out.println("Now, you have: " + client.getAccount().getAmountOfMoney() + "RON");
     }
 
     private static void viewClientCardInformation() {
