@@ -1,18 +1,18 @@
 package model;
 
 public class Client {
-    private int id;
+    private String id;
     private String firstName;
     private String lastName;
     private String CNP;
     private String seriesAndNumberOfCI;
     private String username;
 
-    public int getId(){
+    public String getId(){
         return id;
     }
 
-    public void setId(int id){
+    public void setId(String id){
         this.id = id;
     }
 

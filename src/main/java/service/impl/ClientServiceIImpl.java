@@ -1,12 +1,9 @@
 package service.impl;
 
 import exceptions.CounterExceededException;
-import model.Account;
 import model.Client;
 import utils.Utils;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class ClientServiceIImpl {
@@ -14,7 +11,7 @@ public class ClientServiceIImpl {
     AccountServiceImpl accountService = new AccountServiceImpl();
     Scanner scanner = new Scanner(System.in);
 
-    public Client createClient(String bankID) throws CounterExceededException {
+    public Client createClient() throws CounterExceededException {
         Client client = new Client();
 
         System.out.println("Enter first name: ");
@@ -32,7 +29,6 @@ public class ClientServiceIImpl {
         System.out.println("Enter series and Number of CI: ");
         String seriesAndNumberOfCI = scanner.nextLine();
         client.setSeriesAndNumberOfCI(seriesAndNumberOfCI);
-
 
         Utils.logEntry("First Name: " + client.getFirstName() + ", Last Name: " + client.getLastName());
 

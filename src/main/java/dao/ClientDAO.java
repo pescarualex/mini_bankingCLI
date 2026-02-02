@@ -8,19 +8,19 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class ClientDAO{
-    public void saveClient(Client client){
+    public static void saveClient(Client client){
         String sql = "INSERT INTO clients " +
-                "(firstName, lastName, CNP, serialAndNumberOfCI, username, account) " +
+                "( id, firstName, lastName, CNP, serialAndNumberOfCI, username) " +
                 "VALUES (?,?,?,?,?,?)";
 
         try(Connection connection = DatabaseConnection.getConnection();
             PreparedStatement stmt = connection.prepareStatement(sql)){
-            stmt.setString(1, client.getFirstName());
-            stmt.setString(1, client.getLastName());
-            stmt.setString(1, client.getCNP());
-            stmt.setString(1, client.getSeriesAndNumberOfCI());
-            stmt.setString(1, client.getUsername());
-            stmt.setString(1, client.getAccount());
+            stmt.setString(1, client.getId());
+            stmt.setString(2, client.getFirstName());
+            stmt.setString(3, client.getLastName());
+            stmt.setString(4, client.getCNP());
+            stmt.setString(5, client.getSeriesAndNumberOfCI());
+            stmt.setString(6, client.getUsername());
         } catch (SQLException e){
             e.printStackTrace();
         }

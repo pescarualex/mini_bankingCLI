@@ -1,5 +1,6 @@
 package main;
 
+import dao.ClientDAO;
 import exceptions.CounterExceededException;
 import model.*;
 import service.impl.AccountServiceImpl;
@@ -30,6 +31,7 @@ public class Main {
     static List<Client> BRDclients = new ArrayList<>();
 
     static Client client;
+    static Account account;
 
     public static void main(String[] args) throws CounterExceededException {
         while(true){
@@ -61,34 +63,53 @@ public class Main {
             case 1:
                 bankService.addBank(BT);
                 Utils.logEntry("Account created at bank: " + BT.getBankName());
-                client = clientService.createClient(BT.getID());
-                Account account = accountService.createAccount(BT.getID());
+                client = clientService.createClient();
+                accountService.createAccount(BT.getID());
+                account = new Account(BT.getID());
                 account.setClient_ID(client.getId());
+                account.setAmountOfMoney(0L);
                 BTclients.add(client);
+
+                ClientDAO.saveClient(client);
                 Utils.logEntry("Client: " + client.getFirstName() + " " + client.getLastName() +
                         "added to bank: " + BT.getBankName());
                 break;
             case 2:
                 bankService.addBank(BCR);
                 Utils.logEntry("Account created at bank: " + BCR.getBankName());
-                client = clientService.createClient(BCR.getID());
+                client = clientService.createClient();
+                accountService.createAccount(BCR.getID());
+                account = new Account(BCR.getID());
+                account.setClient_ID(client.getId());
+                account.setAmountOfMoney(0L);
                 BCRclients.add(client);
+                ClientDAO.saveClient(client);
                 Utils.logEntry("Client: " + client.getFirstName() + " " + client.getLastName() +
                         "added to bank: " + BCR.getBankName());
                 break;
             case 3:
                 bankService.addBank(ING);
                 Utils.logEntry("Account created at bank: " + ING.getBankName());
-                client = clientService.createClient(ING.getID());
+                client = clientService.createClient();
+                accountService.createAccount(ING.getID());
+                account = new Account(ING.getID());
+                account.setClient_ID(client.getId());
+                account.setAmountOfMoney(0L);
                 INGclients.add(client);
+                ClientDAO.saveClient(client);
                 Utils.logEntry("Client: " + client.getFirstName() + " " + client.getLastName() +
                         "added to bank: " + ING.getBankName());
                 break;
             case 4:
                 bankService.addBank(BRD);
                 Utils.logEntry("Account created at bank: " + BRD.getBankName());
-                client = clientService.createClient(BRD.getID());
+                client = clientService.createClient();
+                accountService.createAccount(BRD.getID());
+                account = new Account(BRD.getID());
+                account.setClient_ID(client.getId());
+                account.setAmountOfMoney(0L);
                 BRDclients.add(client);
+                ClientDAO.saveClient(client);
                 Utils.logEntry("Client: " + client.getFirstName() + " " + client.getLastName() +
                         "added to bank: " + BRD.getBankName());
                 break;

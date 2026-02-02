@@ -2,6 +2,7 @@ package model;
 
 public class IBAN {
     private String IBAN;
+    private String account_id;
 
 
     public String getIBAN() {
@@ -10,6 +11,14 @@ public class IBAN {
 
     public void setIBAN(String IBAN){
         this.IBAN = IBAN;
+    }
+
+    public String getAccountID(){
+        return account_id;
+    }
+
+    public void setAccountID(String accountID){
+        this.account_id = accountID;
     }
 
     @Override

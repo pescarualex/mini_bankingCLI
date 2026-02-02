@@ -9,6 +9,7 @@ public class Card {
     private String pin_code;
     private LocalDate expirationDate;
     private String CVV;
+    private String account_ID;
 
     public String getCardNumber(){
         return cardNumber;
@@ -40,6 +41,14 @@ public class Card {
 
     public void setCVV(String CVV){
         this.CVV = CVV;
+    }
+
+    public String getAccountID(){
+        return account_ID;
+    }
+
+    public void setAccountID(){
+        this.account_ID = account_ID;
     }
 
     @Override
