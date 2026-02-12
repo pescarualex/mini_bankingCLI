@@ -1,18 +1,18 @@
 package model;
 
 public class Client {
-    private String id;
+    private int id = 0;
     private String firstName;
     private String lastName;
     private String CNP;
     private String seriesAndNumberOfCI;
     private String username;
 
-    public String getId(){
+    public int getId(){
         return id;
     }
 
-    public void setId(String id){
+    public void setId(int id){
         this.id = id;
     }
 
@@ -52,9 +52,10 @@ public class Client {
         return username;
     }
 
-    public void setUsername(String firstName, String lastName) {
+    public void setUsername(String firstName, String lastName){
         this.username = firstName + " " + lastName;
     }
+
 
 
     @Override

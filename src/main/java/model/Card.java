@@ -5,11 +5,16 @@ import utils.Utils;
 import java.time.LocalDate;
 
 public class Card {
+    private int id;
     private String cardNumber;
     private String pin_code;
     private LocalDate expirationDate;
     private String CVV;
     private String account_ID;
+
+    public int getCardID(){
+        return id;
+    }
 
     public String getCardNumber(){
         return cardNumber;

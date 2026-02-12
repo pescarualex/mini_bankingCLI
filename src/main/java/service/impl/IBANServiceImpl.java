@@ -2,6 +2,7 @@ package service.impl;
 
 
 import exceptions.CounterExceededException;
+import model.Bank;
 import utils.Utils;
 
 import java.math.BigInteger;
@@ -12,14 +13,14 @@ public class IBANServiceImpl {
     private final BankServiceImpl bankService = new BankServiceImpl();
     private static Map<String, Integer> MAP_VALUES;
 
-    public String generateIBAN(String countryCode, String bankID) throws CounterExceededException {
+    public String generateIBAN(String countryCode, Bank bank) throws CounterExceededException {
         MAP_VALUES = getStringIntegerMap();
 
         int counter = 0;
         int uniqueCounter = 0;
         while (counter < 5) {
             String checksum = "00";
-            String bankCode = bankService.getBankCode(bankID);
+            String bankCode = bank.getBankCode();
             StringBuilder bankIdentificationCode = new StringBuilder(uniqueCounter + Utils.generateNumbers(3));
             StringBuilder uniqueNrOfAccount = new StringBuilder(Utils.generateNumbers(16));
 

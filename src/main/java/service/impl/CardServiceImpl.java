@@ -10,16 +10,15 @@ import java.util.Set;
 public class CardServiceImpl {
 
     private static final Set<String> UNIQUE_CARD_NUMBERS = new HashSet<>();
-    BankServiceImpl bankService = new BankServiceImpl();
 
 
     /// first digit identifies the Visa or Mastercard
-    public String generateCardNumber(String bankID){
+    public String generateCardNumber(Bank bank){
         StringBuilder initialCardNumber = new StringBuilder();
         StringBuilder cardNumberProcessed = new StringBuilder();
 
         // add payment network digit
-        String paymentNetwork = bankService.getPaymentNetwork(bankID);
+        String paymentNetwork = bank.getPaymentNetwork();
         String paymentNetworkDigit = "";
         if(paymentNetwork.equals("Visa")){
             paymentNetworkDigit = "4";

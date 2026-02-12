@@ -1,6 +1,7 @@
 package model;
 
 public class IBAN {
+    private int id;
     private String IBAN;
     private String account_id;
 
