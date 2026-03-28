@@ -2,11 +2,13 @@ package main;
 
 import dao.AccountDAO;
 import dao.BankDAO;
+import dao.CardDAO;
 import dao.ClientDAO;
 import exceptions.CounterExceededException;
 import model.*;
 import service.impl.AccountServiceImpl;
 import service.impl.BankServiceImpl;
+import service.impl.CardServiceImpl;
 import service.impl.ClientServiceIImpl;
 import utils.Utils;
 
@@ -23,8 +25,6 @@ public class Main {
     static BankServiceImpl bankService = new BankServiceImpl();
     static AccountServiceImpl accountService = new AccountServiceImpl();
 
-
-
     static Client client;
     static Account account;
 
@@ -38,6 +38,17 @@ public class Main {
 
         Bank bankByClientID = BankDAO.getBankByClientID(17);
         System.out.println(bankByClientID);
+
+        Card card = new Card();
+        card.setCardNumber(CardServiceImpl.generateCardNumber(bankByClientID));
+        card.setPin_code(CardServiceImpl.generatePinCode());
+        card.setCVV(CardServiceImpl.generateCVV());
+        card.setExpirationDate(CardServiceImpl.getCardExpirationDate());
+        card.setAccount_ID(accountByClientID.getID());
+        CardDAO.saveCard(card);
+
+        Card cardByAccountID = CardDAO.getCardByAccountID(accountByClientID.getID());
+        System.out.println(cardByAccountID);
 
 
 //

@@ -13,7 +13,7 @@ public class CardServiceImpl {
 
 
     /// first digit identifies the Visa or Mastercard
-    public String generateCardNumber(Bank bank){
+    public static String generateCardNumber(Bank bank){
         StringBuilder initialCardNumber = new StringBuilder();
         StringBuilder cardNumberProcessed = new StringBuilder();
 
@@ -77,15 +77,15 @@ public class CardServiceImpl {
     }
 
 
-    public String generatePinCode(){
+    public static String generatePinCode(){
         return Utils.generateNumbers(4);
     }
 
-    public String generateCVV(){
+    public static String generateCVV(){
         return Utils.generateNumbers(3);
     }
 
-    public LocalDate getCardExpirationDate(){
+    public static LocalDate getCardExpirationDate(){
         LocalDate date = LocalDate.now();
         return date.plusYears(5L);
     }

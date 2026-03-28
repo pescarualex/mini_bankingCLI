@@ -10,59 +10,65 @@ public class Card {
     private String pin_code;
     private LocalDate expirationDate;
     private String CVV;
-    private String account_ID;
+    private int account_ID;
 
-    public int getCardID(){
+    public int getId() {
         return id;
     }
 
-    public String getCardNumber(){
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getCardNumber() {
         return cardNumber;
     }
 
-    public void setCardNumber(String cardNumber){
+    public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
     }
 
-    public String getPinCode(){
+    public String getPin_code() {
         return pin_code;
     }
 
-    public void setPinCode(String pinCode) {
-        this.pin_code = pinCode;
+    public void setPin_code(String pin_code) {
+        this.pin_code = pin_code;
     }
 
-    public LocalDate getExpirationDate(){
+    public LocalDate getExpirationDate() {
         return expirationDate;
     }
 
-    public void setExpirationDate(LocalDate expirationDate){
+    public void setExpirationDate(LocalDate expirationDate) {
         this.expirationDate = expirationDate;
     }
 
-    public String getCVV(){
+    public String getCVV() {
         return CVV;
     }
 
-    public void setCVV(String CVV){
+    public void setCVV(String CVV) {
         this.CVV = CVV;
     }
 
-    public String getAccountID(){
+    public int getAccount_ID() {
         return account_ID;
     }
 
-    public void setAccountID(){
+    public void setAccount_ID(int account_ID) {
         this.account_ID = account_ID;
     }
 
     @Override
     public String toString() {
         return "Card{" +
-                "cardNumber='" + cardNumber + '\'' +
-                ", pin_code=" + pin_code +
+                "id=" + id +
+                ", cardNumber='" + cardNumber + '\'' +
+                ", pin_code='" + pin_code + '\'' +
                 ", expirationDate=" + expirationDate +
-                ", CVV=" + CVV +
+                ", CVV='" + CVV + '\'' +
+                ", account_ID=" + account_ID +
                 '}';
     }
 }
