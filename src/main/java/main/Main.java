@@ -29,6 +29,12 @@ public class Main {
     static Account account;
 
     public static void main(String[] args) throws CounterExceededException, SQLException {
+//
+        Client clientByID = ClientDAO.getClientByID(17);
+        System.out.println(clientByID);
+
+
+//
 //        while(true){
 //            System.out.println("\tWelcome!");
 //            System.out.println("1. New client?\n" +

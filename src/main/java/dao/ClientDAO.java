@@ -24,7 +24,7 @@ public class ClientDAO{
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
                 int generatedId = rs.getInt(1);
-                client.setId(generatedId);   // actualizezi obiectul
+                client.setId(generatedId);
                 return generatedId;
             }
         } catch (SQLException e){
@@ -33,4 +33,33 @@ public class ClientDAO{
 
         throw new SQLException("Failed to retrieve generated ID.");
     }
+
+    public static Client getClientByID(int clientID) throws SQLException {
+        String sql = "SELECT id, firstName, lastName, CNP, seriesAndNumberOfCI, username FROM client WHERE id=?";
+
+        try(Connection connection = DatabaseConnection.getConnection();
+            PreparedStatement stmt = connection.prepareStatement(sql)){
+            stmt.setInt(1, clientID);
+
+            ResultSet resultSet = stmt.executeQuery();
+            if (resultSet.next()){
+                Client client = new Client();
+                client.setId(resultSet.getInt("id"));
+                client.setFirstName(resultSet.getString("firstName"));
+                client.setLastName(resultSet.getString("lastName"));
+                client.setCNP(resultSet.getString("CNP"));
+                client.setSeriesAndNumberOfCI(resultSet.getString("seriesAndNumberOfCI"));
+                client.setUsername(resultSet.getString("username"));
+
+                return client;
+            }
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        //if no client, return null
+        return null;
+    }
+
 }

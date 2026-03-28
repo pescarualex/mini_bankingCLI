@@ -52,17 +52,20 @@ public class Client {
         return username;
     }
 
-    public void setUsername(String firstName, String lastName){
-        this.username = firstName + " " + lastName;
+    public void setUsername(String username){
+        this.username = username;
     }
-
 
 
     @Override
     public String toString() {
         return "Client{" +
-                "firstName='" + firstName + '\'' +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", CNP='" + CNP + '\'' +
+                ", seriesAndNumberOfCI='" + seriesAndNumberOfCI + '\'' +
+                ", username='" + username + '\'' +
                 '}';
     }
 }
