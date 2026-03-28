@@ -5,27 +5,36 @@ public class IBAN {
     private String IBAN;
     private String account_id;
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getIBAN() {
         return IBAN;
     }
 
-    public void setIBAN(String IBAN){
+    public void setIBAN(String IBAN) {
         this.IBAN = IBAN;
     }
 
-    public String getAccountID(){
+    public String getAccount_id() {
         return account_id;
     }
 
-    public void setAccountID(String accountID){
-        this.account_id = accountID;
+    public void setAccount_id(String account_id) {
+        this.account_id = account_id;
     }
 
     @Override
     public String toString() {
         return "IBAN{" +
-                "IBAN='" + IBAN + '\'' +
+                "id=" + id +
+                ", IBAN='" + IBAN + '\'' +
+                ", account_id='" + account_id + '\'' +
                 '}';
     }
 }

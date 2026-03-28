@@ -13,7 +13,7 @@ public class IBANServiceImpl {
     private final BankServiceImpl bankService = new BankServiceImpl();
     private static Map<String, Integer> MAP_VALUES;
 
-    public String generateIBAN(String countryCode, Bank bank) throws CounterExceededException {
+    public static String generateIBAN(String countryCode, Bank bank) throws CounterExceededException {
         MAP_VALUES = getStringIntegerMap();
 
         int counter = 0;
@@ -86,7 +86,7 @@ public class IBANServiceImpl {
     }
 
 
-    public int checkValidityOfIBAN(StringBuilder ibanToCheck) {
+    public static int checkValidityOfIBAN(StringBuilder ibanToCheck) {
         /// Final check if entire iban after checksum is generated % 97 == 1 to ensure validity
         StringBuilder stringBuilder = new StringBuilder();
         for (char ch : ibanToCheck.toString().toCharArray()) {
@@ -100,7 +100,7 @@ public class IBANServiceImpl {
     }
 
     // convert letters to number. Each letter correspond to a number from MAP_VALUES
-    private StringBuilder convertLetterToNumber(Map<String, Integer> MAP_VALUES, StringBuilder ibanOnlyNumbers, char ch) {
+    private static StringBuilder convertLetterToNumber(Map<String, Integer> MAP_VALUES, StringBuilder ibanOnlyNumbers, char ch) {
         String charToString = String.valueOf(ch);
         String upperCase = charToString.toUpperCase();
         Integer i;
@@ -114,7 +114,7 @@ public class IBANServiceImpl {
     }
 
     // map each letter to corresponded number
-    private Map<String, Integer> getStringIntegerMap() {
+    private static Map<String, Integer> getStringIntegerMap() {
         final Map<String, Integer> MAP_VALUES = new HashMap<>();
         MAP_VALUES.put("A", 10);
         MAP_VALUES.put("B", 11);

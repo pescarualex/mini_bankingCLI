@@ -1,15 +1,9 @@
 package main;
 
-import dao.AccountDAO;
-import dao.BankDAO;
-import dao.CardDAO;
-import dao.ClientDAO;
+import dao.*;
 import exceptions.CounterExceededException;
 import model.*;
-import service.impl.AccountServiceImpl;
-import service.impl.BankServiceImpl;
-import service.impl.CardServiceImpl;
-import service.impl.ClientServiceIImpl;
+import service.impl.*;
 import utils.Utils;
 
 import java.sql.SQLException;
@@ -49,6 +43,15 @@ public class Main {
 
         Card cardByAccountID = CardDAO.getCardByAccountID(accountByClientID.getID());
         System.out.println(cardByAccountID);
+
+
+        IBAN iban = new IBAN();
+        iban.setIBAN(IBANServiceImpl.generateIBAN("RO", bankByClientID));
+        iban.setAccount_id(String.valueOf(accountByClientID.getID()));
+        IbanDAO.saveIBAN(iban);
+
+        IBAN ibanByAccountID = IbanDAO.getIbanByAccountID(accountByClientID.getID());
+        System.out.println(ibanByAccountID);
 
 
 //
