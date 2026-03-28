@@ -31,4 +31,28 @@ public class AccountDAO {
 
         throw new SQLException("Failed to retrieve generated ID.");
     }
+
+
+    public static Account getAccountByClientID(int clientID) throws SQLException {
+        String sql = "SELECT id, client_ID, amountOfMoney FROM account WHERE client_ID = ?";
+
+        try(Connection connection = DatabaseConnection.getConnection();
+        PreparedStatement stmt = connection.prepareStatement(sql)){
+            stmt.setInt(1, clientID);
+
+            ResultSet resultSet = stmt.executeQuery();
+            if(resultSet.next()){
+                Account account = new Account();
+                account.setID(resultSet.getInt("id"));
+                account.setClient_ID(resultSet.getInt("client_ID"));
+                account.setAmountOfMoney(resultSet.getLong("amountOfMoney"));
+
+                return account;
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 }

@@ -33,6 +33,9 @@ public class Main {
         Client clientByID = ClientDAO.getClientByID(17);
         System.out.println(clientByID);
 
+        Account accountByClientID = AccountDAO.getAccountByClientID(17);
+        System.out.println(accountByClientID);
+
 
 //
 //        while(true){

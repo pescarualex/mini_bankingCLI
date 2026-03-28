@@ -35,4 +35,12 @@ public class Account {
     }
 
 
+    @Override
+    public String toString() {
+        return "Account{" +
+                "ID=" + ID +
+                ", client_ID=" + client_ID +
+                ", amountOfMoney=" + amountOfMoney +
+                '}';
+    }
 }
