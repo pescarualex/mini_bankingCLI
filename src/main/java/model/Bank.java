@@ -5,7 +5,7 @@ import utils.Utils;
 import java.util.List;
 
 public class Bank {
-    private int ID;
+    private int id;
     private String bankName;
     private String bankSwift;
     private String paymentNetwork;
@@ -13,17 +13,12 @@ public class Bank {
     private int account_ID;
     private int client_ID;
 
-
-    public Bank() {
-    }
-
-
     public int getID() {
-        return ID;
+        return id;
     }
 
     public void setID(int ID) {
-        this.ID = ID;
+        this.id = ID;
     }
 
     public String getBankName() {
@@ -77,7 +72,7 @@ public class Bank {
     @Override
     public String toString() {
         return "Bank{" +
-                "ID=" + ID +
+                "ID=" + id +
                 ", bankName='" + bankName + '\'' +
                 ", bankSwift='" + bankSwift + '\'' +
                 ", paymentNetwork='" + paymentNetwork + '\'' +

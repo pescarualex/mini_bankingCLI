@@ -35,22 +35,33 @@ public class BankDAO{
         throw new SQLException("Failed to retrieve generated ID.");
     }
 
-    public static void getBankByClientID(int clientID){
-        String sql = "SELECT paymentNetwork from bank WHERE client_ID = ?";
+    public static Bank getBankByClientID(int client_ID){
+        String sql = "SELECT ID, bankName, bankSwift, paymentNetwork, bankCode, account_ID, client_ID " +
+                "from bank WHERE client_ID = ?";
 
         try(Connection connection = DatabaseConnection.getConnection();
         PreparedStatement stmt = connection.prepareStatement(sql)){
+            stmt.setInt(1, client_ID);
+
 
             ResultSet resultSet = stmt.executeQuery();
             if (resultSet.next()){
                 Bank bank = new Bank();
                 bank.setID(resultSet.getInt("id"));
-                bank.setClientID(resultSet.getInt("clientID"));
-                bank.setAccountID(resultSet.getInt("accountID"));
+                bank.setBankName(resultSet.getString("bankName"));
+                bank.setBankSwift(resultSet.getString("bankSwift"));
+                bank.setPaymentNetwork(resultSet.getString("paymentNetwork"));
+                bank.setBankCode(resultSet.getString("bankCode"));
+                bank.setClientID(resultSet.getInt("client_ID"));
+                bank.setAccountID(resultSet.getInt("account_ID"));
+
+                return bank;
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
+
+        return null;
     }
 }

@@ -36,6 +36,9 @@ public class Main {
         Account accountByClientID = AccountDAO.getAccountByClientID(17);
         System.out.println(accountByClientID);
 
+        Bank bankByClientID = BankDAO.getBankByClientID(17);
+        System.out.println(bankByClientID);
+
 
 //
 //        while(true){
