@@ -6,44 +6,64 @@ import java.util.List;
 
 public class Bank {
     private int ID;
-    private final String bankName;
-    private final String bankSwift;
-    private final String paymentNetwork;
-    private final String bankCode;
+    private String bankName;
+    private String bankSwift;
+    private String paymentNetwork;
+    private String bankCode;
     private int account_ID;
     private int client_ID;
 
 
-    public Bank(String bankName, String bankSwift,
-                String bankCode, String paymentNetwork) {
-        this.bankName = bankName;
-        this.bankSwift = bankSwift;
-        this.bankCode = bankCode;
-        this.paymentNetwork = paymentNetwork;
+    public Bank() {
     }
+
 
     public int getID() {
         return ID;
     }
 
-    public void setID(int id){
-        this.ID = id;
+    public void setID(int ID) {
+        this.ID = ID;
     }
 
     public String getBankName() {
         return bankName;
     }
 
-    public String getBankSwift(){
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
+
+    public String getBankSwift() {
         return bankSwift;
+    }
+
+    public void setBankSwift(String bankSwift) {
+        this.bankSwift = bankSwift;
     }
 
     public String getPaymentNetwork() {
         return paymentNetwork;
     }
 
+    public void setPaymentNetwork(String paymentNetwork) {
+        this.paymentNetwork = paymentNetwork;
+    }
+
     public String getBankCode() {
         return bankCode;
+    }
+
+    public void setBankCode(String bankCode) {
+        this.bankCode = bankCode;
+    }
+
+    public int getAccountID() {
+        return account_ID;
+    }
+
+    public void setAccountID(int account_ID) {
+        this.account_ID = account_ID;
     }
 
     public int getClientID() {
@@ -54,11 +74,16 @@ public class Bank {
         this.client_ID = client_ID;
     }
 
-    public int getAccountID(){
-        return account_ID;
-    }
-
-    public void setAccountID(int account_ID){
-        this.account_ID = account_ID;
+    @Override
+    public String toString() {
+        return "Bank{" +
+                "ID=" + ID +
+                ", bankName='" + bankName + '\'' +
+                ", bankSwift='" + bankSwift + '\'' +
+                ", paymentNetwork='" + paymentNetwork + '\'' +
+                ", bankCode='" + bankCode + '\'' +
+                ", account_ID=" + account_ID +
+                ", client_ID=" + client_ID +
+                '}';
     }
 }
