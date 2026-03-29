@@ -1,11 +1,15 @@
 package service.impl;
 
 
+import dao.IbanDAO;
 import exceptions.CounterExceededException;
+import model.Account;
 import model.Bank;
+import model.IBAN;
 import utils.Utils;
 
 import java.math.BigInteger;
+import java.sql.SQLException;
 import java.util.*;
 
 public class IBANServiceImpl {
@@ -13,9 +17,19 @@ public class IBANServiceImpl {
     private final BankServiceImpl bankService = new BankServiceImpl();
     private static Map<String, Integer> MAP_VALUES;
 
+    public IBAN createIban(String countryCode, Bank bank, Account account) throws CounterExceededException, SQLException {
+        IBAN iban = new IBAN();
+        iban.setIBAN(IBANServiceImpl.generateIBAN(countryCode, bank));
+        iban.setAccount_id(account.getID());
+
+        IbanDAO.saveIBAN(iban);
+
+        return iban;
+    }
+
+
     public static String generateIBAN(String countryCode, Bank bank) throws CounterExceededException {
         MAP_VALUES = getStringIntegerMap();
-
         int counter = 0;
         int uniqueCounter = 0;
         while (counter < 5) {

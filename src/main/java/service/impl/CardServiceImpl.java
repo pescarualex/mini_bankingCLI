@@ -1,8 +1,12 @@
 package service.impl;
 
+import dao.CardDAO;
+import model.Account;
 import model.Bank;
+import model.Card;
 import utils.Utils;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,6 +14,19 @@ import java.util.Set;
 public class CardServiceImpl {
 
     private static final Set<String> UNIQUE_CARD_NUMBERS = new HashSet<>();
+
+    public Card createCard(Bank bank, Account account) throws SQLException {
+        Card card = new Card();
+        card.setCardNumber(CardServiceImpl.generateCardNumber(bank));
+        card.setPin_code(CardServiceImpl.generatePinCode());
+        card.setCVV(CardServiceImpl.generateCVV());
+        card.setExpirationDate(CardServiceImpl.getCardExpirationDate());
+        card.setAccount_ID(account.getID());
+
+        CardDAO.saveCard(card);
+
+        return card;
+    }
 
 
     /// first digit identifies the Visa or Mastercard
@@ -75,7 +92,6 @@ public class CardServiceImpl {
             throw new IllegalArgumentException("Invalid card number");
         }
     }
-
 
     public static String generatePinCode(){
         return Utils.generateNumbers(4);

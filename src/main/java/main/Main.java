@@ -4,23 +4,13 @@ import dao.*;
 import exceptions.CounterExceededException;
 import model.*;
 import service.impl.*;
-import utils.Utils;
 
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class Main {
     static Scanner scanner = new Scanner(System.in);
 
-    static ClientServiceIImpl clientService = new ClientServiceIImpl();
-    static BankServiceImpl bankService = new BankServiceImpl();
-    static AccountServiceImpl accountService = new AccountServiceImpl();
-
-    static Client client;
-    static Account account;
 
     public static void main(String[] args) throws CounterExceededException, SQLException {
 //
@@ -47,7 +37,7 @@ public class Main {
 
         IBAN iban = new IBAN();
         iban.setIBAN(IBANServiceImpl.generateIBAN("RO", bankByClientID));
-        iban.setAccount_id(String.valueOf(accountByClientID.getID()));
+        iban.setAccount_id(accountByClientID.getID());
         IbanDAO.saveIBAN(iban);
 
         IBAN ibanByAccountID = IbanDAO.getIbanByAccountID(accountByClientID.getID());

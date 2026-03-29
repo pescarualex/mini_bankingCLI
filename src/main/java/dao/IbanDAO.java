@@ -17,7 +17,7 @@ public class IbanDAO {
         try(Connection connection = DatabaseConnection.getConnection();
             PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
             stmt.setString(1, iban.getIBAN());
-            stmt.setString(2, iban.getAccount_id());
+            stmt.setInt(2, iban.getAccount_id());
 
             stmt.executeUpdate();
 
@@ -48,7 +48,7 @@ public class IbanDAO {
                 IBAN iban = new IBAN();
                 iban.setId(resultSet.getInt("id"));
                 iban.setIBAN(resultSet.getString("IBAN"));
-                iban.setAccount_id(resultSet.getString("account_id"));
+                iban.setAccount_id(resultSet.getInt("account_id"));
 
                 return iban;
             }

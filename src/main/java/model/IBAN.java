@@ -3,7 +3,7 @@ package model;
 public class IBAN {
     private int id;
     private String IBAN;
-    private String account_id;
+    private int account_id;
 
     public int getId() {
         return id;
@@ -21,11 +21,11 @@ public class IBAN {
         this.IBAN = IBAN;
     }
 
-    public String getAccount_id() {
+    public int getAccount_id() {
         return account_id;
     }
 
-    public void setAccount_id(String account_id) {
+    public void setAccount_id(int account_id) {
         this.account_id = account_id;
     }
 

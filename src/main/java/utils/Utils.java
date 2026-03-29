@@ -2,15 +2,13 @@ package utils;
 
 import java.security.SecureRandom;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Utils {
     private static final SecureRandom secureRandom = new SecureRandom();
     private static final Set<String> numbersGenerated = new HashSet<>();
     private static List<String> logs = new ArrayList<>();
+    private static Scanner scanner = new Scanner(System.in);
 
     public static String generateNumbers(int length) {
         String generatedString = "";
@@ -47,5 +45,9 @@ public class Utils {
         } else {
             System.out.println("System -> No logs");
         }
+    }
+
+    public static String readInput(){
+        return scanner.nextLine();
     }
 }
