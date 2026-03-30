@@ -1,7 +1,9 @@
 package service.impl;
 
+import dao.AuditTrailDAO;
 import dao.BankDAO;
 import model.Account;
+import model.AuditTrail;
 import model.Bank;
 import model.Client;
 import utils.Utils;
@@ -22,6 +24,9 @@ public class BankServiceImpl {
         bank.setClientID(client.getId());
 
         BankDAO.saveBank(bank);
+
+        AuditTrail auditTrail = Utils.logEntry("Created bank: " + bank.getBankName() + ", accountID: " + account.getID(), client.getId());
+        AuditTrailDAO.saveAuditTrail(auditTrail);
 
         return bank;
     }

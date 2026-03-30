@@ -1,7 +1,9 @@
 package service.impl;
 
+import dao.AuditTrailDAO;
 import dao.CardDAO;
 import model.Account;
+import model.AuditTrail;
 import model.Bank;
 import model.Card;
 import utils.Utils;
@@ -24,6 +26,10 @@ public class CardServiceImpl {
         card.setAccount_ID(account.getID());
 
         CardDAO.saveCard(card);
+
+        AuditTrail auditTrail = Utils.logEntry("Created card for account: " + account.getID() +
+                " at bank: " + bank.getBankName(), account.getClient_ID());
+        AuditTrailDAO.saveAuditTrail(auditTrail);
 
         return card;
     }

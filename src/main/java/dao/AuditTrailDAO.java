@@ -5,12 +5,14 @@ import model.AuditTrail;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AuditTrailDAO {
     public static int saveAuditTrail(AuditTrail auditTrail) throws SQLException {
-        String sql = "INSERT INTO auditTrail " +
+        String sql = "INSERT INTO audittrail " +
                 "(entry, timestamp, clientID) " +
-                "VALUES (?,?)";
+                "VALUES (?,?,?)";
 
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -34,8 +36,10 @@ public class AuditTrailDAO {
     }
 
 
-    public static AuditTrail getAuditTrailByClientID(int clientID) throws SQLException {
-        String sql = "SELECT id, entry, timestamp, clientID FROM auditTrail WHERE client_ID = ?";
+    public static List<AuditTrail> getAuditTrailByClientID(int clientID) throws SQLException {
+        String sql = "SELECT id, entry, timestamp, clientID FROM audittrail WHERE clientID = ?";
+
+        List<AuditTrail> auditTrailEntries = new ArrayList<>();
 
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -48,37 +52,36 @@ public class AuditTrailDAO {
                 auditTrail.setEntry(resultSet.getString("entry"));
                 auditTrail.setTimestamp(LocalDate.parse(resultSet.getString("timestamp")));
                 auditTrail.setClientID(resultSet.getInt("clientID"));
-
-                return auditTrail;
+                auditTrailEntries.add(auditTrail);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return null;
+        return auditTrailEntries;
     }
 
-    public static AuditTrail getAllAuditTrail() throws SQLException {
-        String sql = "SELECT * FROM auditTrail";
+    public static List<AuditTrail> getAllAuditTrail() throws SQLException {
+        String sql = "SELECT id, entry, timestamp, clientID FROM audittrail";
+
+        List<AuditTrail> auditTrailEntries = new ArrayList<>();
 
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
 
             ResultSet resultSet = stmt.executeQuery();
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 AuditTrail auditTrail = new AuditTrail();
                 auditTrail.setId(resultSet.getInt("id"));
                 auditTrail.setEntry(resultSet.getString("entry"));
                 auditTrail.setTimestamp(LocalDate.parse(resultSet.getString("timestamp")));
                 auditTrail.setClientID(resultSet.getInt("clientID"));
-
-                return auditTrail;
+                auditTrailEntries.add(auditTrail);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return null;
+        return auditTrailEntries;
     }
 
 }

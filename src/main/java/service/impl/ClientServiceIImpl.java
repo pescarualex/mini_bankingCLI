@@ -29,10 +29,14 @@ public class ClientServiceIImpl {
         String seriesAndNumberOfCI = Utils.readInputString();
         client.setSeriesAndNumberOfCI(seriesAndNumberOfCI);
 
-        ClientDAO.saveClient(client);
+        System.out.println("Set a username:");
+        String username = Utils.readInputString();
+        client.setUsername(username);
+
+        int clientIDFromDB = ClientDAO.saveClient(client);
 
         AuditTrail auditTrail = Utils.logEntry("First Name: " + client.getFirstName() +
-                ", Last Name: " + client.getLastName(), client.getId());
+                ", Last Name: " + client.getLastName(), clientIDFromDB);
         AuditTrailDAO.saveAuditTrail(auditTrail);
 
         return client;

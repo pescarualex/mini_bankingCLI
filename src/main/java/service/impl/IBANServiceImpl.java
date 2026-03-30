@@ -1,9 +1,11 @@
 package service.impl;
 
 
+import dao.AuditTrailDAO;
 import dao.IbanDAO;
 import exceptions.CounterExceededException;
 import model.Account;
+import model.AuditTrail;
 import model.Bank;
 import model.IBAN;
 import utils.Utils;
@@ -23,6 +25,10 @@ public class IBANServiceImpl {
         iban.setAccount_id(account.getID());
 
         IbanDAO.saveIBAN(iban);
+
+        AuditTrail auditTrail = Utils.logEntry("Created IBAN for account: " + account.getID() +
+                " at bank: " + bank.getBankName(), account.getClient_ID());
+        AuditTrailDAO.saveAuditTrail(auditTrail);
 
         return iban;
     }
