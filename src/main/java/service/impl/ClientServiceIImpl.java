@@ -1,6 +1,8 @@
 package service.impl;
 
+import dao.AuditTrailDAO;
 import dao.ClientDAO;
+import model.AuditTrail;
 import model.Client;
 import utils.Utils;
 
@@ -12,24 +14,26 @@ public class ClientServiceIImpl {
         Client client = new Client();
 
         System.out.println("Enter first name: ");
-        String firstName = Utils.readInput();
+        String firstName = Utils.readInputString();
         client.setFirstName(firstName);
 
         System.out.println("Enter last name: ");
-        String lastName = Utils.readInput();
+        String lastName = Utils.readInputString();
         client.setLastName(lastName);
 
         System.out.println("Enter CNP: ");
-        String CNP = Utils.readInput();
+        String CNP = Utils.readInputString();
         client.setCNP(CNP);
 
         System.out.println("Enter series and Number of CI: ");
-        String seriesAndNumberOfCI = Utils.readInput();
+        String seriesAndNumberOfCI = Utils.readInputString();
         client.setSeriesAndNumberOfCI(seriesAndNumberOfCI);
 
         ClientDAO.saveClient(client);
 
-        Utils.logEntry("First Name: " + client.getFirstName() + ", Last Name: " + client.getLastName());
+        AuditTrail auditTrail = Utils.logEntry("First Name: " + client.getFirstName() +
+                ", Last Name: " + client.getLastName(), client.getId());
+        AuditTrailDAO.saveAuditTrail(auditTrail);
 
         return client;
     }

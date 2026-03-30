@@ -1,5 +1,7 @@
 package utils;
 
+import model.AuditTrail;
+
 import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.*;
@@ -7,7 +9,7 @@ import java.util.*;
 public class Utils {
     private static final SecureRandom secureRandom = new SecureRandom();
     private static final Set<String> numbersGenerated = new HashSet<>();
-    private static List<String> logs = new ArrayList<>();
+    //private static List<String> logs = new ArrayList<>();
     private static Scanner scanner = new Scanner(System.in);
 
     public static String generateNumbers(int length) {
@@ -22,6 +24,7 @@ public class Utils {
                         * secureRandom.nextDouble());
                 stringBuider.append(numericString.charAt(index));
             }
+
             generatedString = stringBuider.toString();
             if (numbersGenerated.add(generatedString)) {
                 return generatedString;
@@ -30,24 +33,31 @@ public class Utils {
     }
 
 
-    public static void logEntry(String message) {
-        String log = LocalDate.now() + " ::: " + message;
-        logs.add(log);
+    public static AuditTrail logEntry(String message, int clientID) {
+        AuditTrail auditTrail = new AuditTrail();
+        auditTrail.setEntry(message);
+        auditTrail.setTimestamp(LocalDate.now());
+        auditTrail.setClientID(clientID);
+        return auditTrail;
     }
 
-    public static void getLogs() {
-        int counter = 0;
-        if (!logs.isEmpty()) {
-            for (String log : logs) {
-                System.out.println(counter + "System -> " + log);
-                counter++;
-            }
-        } else {
-            System.out.println("System -> No logs");
-        }
-    }
+//    public static void getLogs() {
+//        int counter = 0;
+//        if (!logs.isEmpty()) {
+//            for (String log : logs) {
+//                System.out.println(counter + "System -> " + log);
+//                counter++;
+//            }
+//        } else {
+//            System.out.println("System -> No logs");
+//        }
+//    }
 
-    public static String readInput(){
+    public static String readInputString(){
         return scanner.nextLine();
+    }
+
+    public static int readInputInteger(){
+        return scanner.nextInt();
     }
 }

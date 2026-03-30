@@ -14,10 +14,10 @@ public class BankServiceImpl {
 
     public Bank createBank(Client client, Account account) throws SQLException {
         Bank bank = new Bank();
-        bank.setBankName(Utils.readInput());
-        bank.setBankCode(Utils.readInput());
-        bank.setBankSwift(Utils.readInput());
-        bank.setPaymentNetwork(Utils.readInput());
+        bank.setBankName(Utils.readInputString());
+        bank.setBankCode(Utils.readInputString());
+        bank.setBankSwift(Utils.readInputString());
+        bank.setPaymentNetwork(Utils.readInputString());
         bank.setAccountID(account.getID());
         bank.setClientID(client.getId());
 
