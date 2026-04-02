@@ -1,6 +1,8 @@
 package dao;
 
 import db.DatabaseConnection;
+import enums.Role;
+import enums.Status;
 import model.Client;
 
 import java.sql.*;
@@ -8,8 +10,8 @@ import java.sql.*;
 public class ClientDAO{
     public static int saveClient(Client client) throws SQLException {
         String sql = "INSERT INTO client " +
-                "(firstName, lastName, CNP, seriesAndNumberOfCI, username) " +
-                "VALUES (?,?,?,?,?)";
+                "(firstName, lastName, CNP, seriesAndNumberOfCI, username, role, status) " +
+                "VALUES (?,?,?,?,?,?,?)";
 
         try(Connection connection = DatabaseConnection.getConnection();
             PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
@@ -18,6 +20,8 @@ public class ClientDAO{
             stmt.setString(3, client.getCNP());
             stmt.setString(4, client.getSeriesAndNumberOfCI());
             stmt.setString(5, client.getUsername());
+            stmt.setString(6, client.getRole().name());
+            stmt.setString(7, client.getStatus().name());
 
             stmt.executeUpdate();
 
@@ -35,7 +39,7 @@ public class ClientDAO{
     }
 
     public static Client getClientByID(int clientID) throws SQLException {
-        String sql = "SELECT id, firstName, lastName, CNP, seriesAndNumberOfCI, username FROM client WHERE id=?";
+        String sql = "SELECT id, firstName, lastName, CNP, seriesAndNumberOfCI, username, role, status FROM client WHERE id=?";
 
         try(Connection connection = DatabaseConnection.getConnection();
             PreparedStatement stmt = connection.prepareStatement(sql)){
@@ -50,6 +54,8 @@ public class ClientDAO{
                 client.setCNP(resultSet.getString("CNP"));
                 client.setSeriesAndNumberOfCI(resultSet.getString("seriesAndNumberOfCI"));
                 client.setUsername(resultSet.getString("username"));
+                client.setRole(Role.valueOf(resultSet.getString("role").toUpperCase()));
+                client.setStatus(Status.valueOf(resultSet.getString("status").toUpperCase()));
 
                 return client;
             }

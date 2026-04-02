@@ -1,5 +1,8 @@
 package model;
 
+import enums.Role;
+import enums.Status;
+
 public class Client {
     private int id = 0;
     private String firstName;
@@ -7,6 +10,8 @@ public class Client {
     private String CNP;
     private String seriesAndNumberOfCI;
     private String username;
+    private Role role;
+    private Status status;
 
     public int getId(){
         return id;
@@ -56,6 +61,21 @@ public class Client {
         this.username = username;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
     @Override
     public String toString() {
@@ -66,6 +86,8 @@ public class Client {
                 ", CNP='" + CNP + '\'' +
                 ", seriesAndNumberOfCI='" + seriesAndNumberOfCI + '\'' +
                 ", username='" + username + '\'' +
+                ". role=" + role.name() + '\'' +
+                ", status=" + status.name() + '\'' +
                 '}';
     }
 }

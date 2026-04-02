@@ -1,6 +1,8 @@
 package main;
 
 import dao.*;
+import enums.Role;
+import enums.Status;
 import exceptions.CounterExceededException;
 import model.*;
 import service.impl.*;
