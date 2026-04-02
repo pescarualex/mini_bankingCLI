@@ -10,8 +10,8 @@ import java.sql.*;
 public class ClientDAO{
     public static int saveClient(Client client) throws SQLException {
         String sql = "INSERT INTO client " +
-                "(firstName, lastName, CNP, seriesAndNumberOfCI, username, role, status) " +
-                "VALUES (?,?,?,?,?,?,?)";
+                "(firstName, lastName, CNP, seriesAndNumberOfCI, username, role, status, bankID) " +
+                "VALUES (?,?,?,?,?,?,?,?)";
 
         try(Connection connection = DatabaseConnection.getConnection();
             PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
@@ -22,6 +22,7 @@ public class ClientDAO{
             stmt.setString(5, client.getUsername());
             stmt.setString(6, client.getRole().name());
             stmt.setString(7, client.getStatus().name());
+            stmt.setInt(8, client.getBankID());
 
             stmt.executeUpdate();
 
@@ -39,7 +40,7 @@ public class ClientDAO{
     }
 
     public static Client getClientByID(int clientID) throws SQLException {
-        String sql = "SELECT id, firstName, lastName, CNP, seriesAndNumberOfCI, username, role, status FROM client WHERE id=?";
+        String sql = "SELECT id, firstName, lastName, CNP, seriesAndNumberOfCI, username, role, status, bankID FROM client WHERE id=?";
 
         try(Connection connection = DatabaseConnection.getConnection();
             PreparedStatement stmt = connection.prepareStatement(sql)){
@@ -56,6 +57,7 @@ public class ClientDAO{
                 client.setUsername(resultSet.getString("username"));
                 client.setRole(Role.valueOf(resultSet.getString("role").toUpperCase()));
                 client.setStatus(Status.valueOf(resultSet.getString("status").toUpperCase()));
+                client.setBankID(resultSet.getInt("bankID"));
 
                 return client;
             }

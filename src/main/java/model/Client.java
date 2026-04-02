@@ -12,6 +12,7 @@ public class Client {
     private String username;
     private Role role;
     private Status status;
+    private int bankID;
 
     public int getId(){
         return id;
@@ -77,6 +78,14 @@ public class Client {
         this.status = status;
     }
 
+    public int getBankID() {
+        return bankID;
+    }
+
+    public void setBankID(int bankID) {
+        this.bankID = bankID;
+    }
+
     @Override
     public String toString() {
         return "Client{" +
@@ -88,6 +97,7 @@ public class Client {
                 ", username='" + username + '\'' +
                 ". role=" + role.name() + '\'' +
                 ", status=" + status.name() + '\'' +
+                ", bankID=" + bankID + '\'' +
                 '}';
     }
 }

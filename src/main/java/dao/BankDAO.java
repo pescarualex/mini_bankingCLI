@@ -8,8 +8,8 @@ import java.sql.*;
 public class BankDAO{
     public static int saveBank(Bank bank) throws SQLException {
         String sql = "INSERT INTO bank " +
-                "(bankName, bankSwift, paymentNetwork, bankCode, client_ID, account_ID) " +
-                "VALUES (?,?,?,?,?,?)";
+                "(bankName, bankSwift, paymentNetwork, bankCode) " +
+                "VALUES (?,?,?,?)";
 
         try(Connection connection = DatabaseConnection.getConnection();
             PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
@@ -17,8 +17,6 @@ public class BankDAO{
             stmt.setString(2, bank.getBankSwift());
             stmt.setString(3, bank.getPaymentNetwork());
             stmt.setString(4, bank.getBankCode());
-            stmt.setInt(5, bank.getClientID());
-            stmt.setInt(6, bank.getAccountID());
 
             stmt.executeUpdate();
 
@@ -52,8 +50,6 @@ public class BankDAO{
                 bank.setBankSwift(resultSet.getString("bankSwift"));
                 bank.setPaymentNetwork(resultSet.getString("paymentNetwork"));
                 bank.setBankCode(resultSet.getString("bankCode"));
-                bank.setClientID(resultSet.getInt("client_ID"));
-                bank.setAccountID(resultSet.getInt("account_ID"));
 
                 return bank;
             }
@@ -62,6 +58,32 @@ public class BankDAO{
             e.printStackTrace();
         }
 
+        return null;
+    }
+
+    public static Bank getBankByBankName(String bankName){
+        String sql = "SELECT ID, bankName, bankSwift, paymentNetwork, bankCode, account_ID, client_ID " +
+                "from bank WHERE bankName = ?";
+
+        try(Connection connection = DatabaseConnection.getConnection();
+            PreparedStatement stmt = connection.prepareStatement(sql)){
+
+            stmt.setString(1, bankName);
+
+            ResultSet resultSet = stmt.executeQuery();
+            if (resultSet.next()){
+                Bank bank = new Bank();
+                bank.setID(resultSet.getInt("id"));
+                bank.setBankName(resultSet.getString("bankName"));
+                bank.setBankSwift(resultSet.getString("bankSwift"));
+                bank.setPaymentNetwork(resultSet.getString("paymentNetwork"));
+                bank.setBankCode(resultSet.getString("bankCode"));
+
+                return bank;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 }

@@ -10,8 +10,6 @@ public class Bank {
     private String bankSwift;
     private String paymentNetwork;
     private String bankCode;
-    private int account_ID;
-    private int client_ID;
 
     public int getID() {
         return id;
@@ -53,21 +51,6 @@ public class Bank {
         this.bankCode = bankCode;
     }
 
-    public int getAccountID() {
-        return account_ID;
-    }
-
-    public void setAccountID(int account_ID) {
-        this.account_ID = account_ID;
-    }
-
-    public int getClientID() {
-        return client_ID;
-    }
-
-    public void setClientID(int client_ID) {
-        this.client_ID = client_ID;
-    }
 
     @Override
     public String toString() {
@@ -77,8 +60,6 @@ public class Bank {
                 ", bankSwift='" + bankSwift + '\'' +
                 ", paymentNetwork='" + paymentNetwork + '\'' +
                 ", bankCode='" + bankCode + '\'' +
-                ", account_ID=" + account_ID +
-                ", client_ID=" + client_ID +
                 '}';
     }
 }

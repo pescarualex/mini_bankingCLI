@@ -14,6 +14,7 @@ import java.util.List;
 
 public class BankServiceImpl {
 
+    //only and Admin can create banks
     public Bank createBank(Client client, Account account) throws SQLException {
         Bank bank = new Bank();
         bank.setBankName(Utils.readInputString());

@@ -5,9 +5,8 @@ import utils.Utils;
 
 public class Account {
     private int ID;
-    private int client_ID;
     private long amountOfMoney;
-
+    private int client_ID;
 
     public int getID() {
         return ID;

@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 public class ClientServiceIImpl {
 
-    public Client createClient() throws SQLException {
+    public Client createClient(int bankID) throws SQLException {
         Client client = new Client();
 
         System.out.println("Enter first name: ");
@@ -32,6 +32,8 @@ public class ClientServiceIImpl {
         System.out.println("Set a username:");
         String username = Utils.readInputString();
         client.setUsername(username);
+
+        client.setBankID(bankID);
 
         int clientIDFromDB = ClientDAO.saveClient(client);
 
