@@ -4,7 +4,7 @@ import enums.Role;
 import enums.Status;
 
 public class Client {
-    private int id = 0;
+    private int id;
     private String firstName;
     private String lastName;
     private String CNP;

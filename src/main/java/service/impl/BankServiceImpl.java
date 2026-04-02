@@ -15,19 +15,16 @@ import java.util.List;
 public class BankServiceImpl {
 
     //only and Admin can create banks
-    public Bank createBank(Client client, Account account) throws SQLException {
+    public Bank createBank() throws SQLException {
         Bank bank = new Bank();
         bank.setBankName(Utils.readInputString());
         bank.setBankCode(Utils.readInputString());
         bank.setBankSwift(Utils.readInputString());
         bank.setPaymentNetwork(Utils.readInputString());
-        bank.setAccountID(account.getID());
-        bank.setClientID(client.getId());
 
         BankDAO.saveBank(bank);
 
-        AuditTrail auditTrail = Utils.logEntry("Created bank: " + bank.getBankName() + ", accountID: " + account.getID(), client.getId());
-        AuditTrailDAO.saveAuditTrail(auditTrail);
+        Utils.logEntry("Bank: " + bank.getBankName() + " was created, and bank ID: " + bank.getID());
 
         return bank;
     }

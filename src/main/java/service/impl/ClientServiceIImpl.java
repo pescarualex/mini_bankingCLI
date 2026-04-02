@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 public class ClientServiceIImpl {
 
-    public Client createClient(int bankID) throws SQLException {
+    public static Client createClient(int bankID) throws SQLException {
         Client client = new Client();
 
         System.out.println("Enter first name: ");

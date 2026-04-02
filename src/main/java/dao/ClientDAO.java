@@ -70,4 +70,35 @@ public class ClientDAO{
         return null;
     }
 
+    public static Client getClientByUsername(String username) throws SQLException {
+        String sql = "SELECT id, firstName, lastName, CNP, seriesAndNumberOfCI, username, role, status, bankID FROM client WHERE username=?";
+
+        try(Connection connection = DatabaseConnection.getConnection();
+            PreparedStatement stmt = connection.prepareStatement(sql)){
+            stmt.setString(1, username);
+
+            ResultSet resultSet = stmt.executeQuery();
+            if (resultSet.next()){
+                Client client = new Client();
+                client.setId(resultSet.getInt("id"));
+                client.setFirstName(resultSet.getString("firstName"));
+                client.setLastName(resultSet.getString("lastName"));
+                client.setCNP(resultSet.getString("CNP"));
+                client.setSeriesAndNumberOfCI(resultSet.getString("seriesAndNumberOfCI"));
+                client.setUsername(resultSet.getString("username"));
+                client.setRole(Role.valueOf(resultSet.getString("role").toUpperCase()));
+                client.setStatus(Status.valueOf(resultSet.getString("status").toUpperCase()));
+                client.setBankID(resultSet.getInt("bankID"));
+
+                return client;
+            }
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        //if no client, return null
+        return null;
+    }
+
 }

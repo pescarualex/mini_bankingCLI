@@ -1,8 +1,10 @@
 package utils;
 
+import dao.AuditTrailDAO;
 import model.AuditTrail;
 
 import java.security.SecureRandom;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -33,11 +35,22 @@ public class Utils {
     }
 
 
-    public static AuditTrail logEntry(String message, int clientID) {
+    public static AuditTrail logEntry(String message, int clientID) throws SQLException {
         AuditTrail auditTrail = new AuditTrail();
         auditTrail.setEntry(message);
         auditTrail.setTimestamp(LocalDate.now());
         auditTrail.setClientID(clientID);
+
+        AuditTrailDAO.saveAuditTrail(auditTrail);
+        return auditTrail;
+    }
+
+    public static AuditTrail logEntry(String message) throws SQLException {
+        AuditTrail auditTrail = new AuditTrail();
+        auditTrail.setEntry(message);
+        auditTrail.setTimestamp(LocalDate.now());
+
+        AuditTrailDAO.saveAuditTrail(auditTrail);
         return auditTrail;
     }
 
