@@ -24,7 +24,7 @@ public class BankServiceImpl {
 
         BankDAO.saveBank(bank);
 
-        System.out.println("Bank added successfully!");
+        System.out.println("Bank created successfully!");
 
         AuditTrail auditTrail = Utils.logEntry("Bank: " + bank.getBankName() + " was created, and bank ID: " + bank.getID());
         AuditTrailDAO.saveAuditTrail(auditTrail);

@@ -17,7 +17,7 @@ public class CardServiceImpl {
 
     private static final Set<String> UNIQUE_CARD_NUMBERS = new HashSet<>();
 
-    public Card createCard(Bank bank, Account account) throws SQLException {
+    public static Card createCard(Bank bank, Account account) throws SQLException {
         Card card = new Card();
         card.setCardNumber(CardServiceImpl.generateCardNumber(bank));
         card.setPin_code(CardServiceImpl.generatePinCode());

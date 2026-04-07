@@ -19,7 +19,7 @@ public class IBANServiceImpl {
     private final BankServiceImpl bankService = new BankServiceImpl();
     private static Map<String, Integer> MAP_VALUES;
 
-    public IBAN createIban(String countryCode, Bank bank, Account account) throws CounterExceededException, SQLException {
+    public static IBAN createIban(String countryCode, Bank bank, Account account) throws CounterExceededException, SQLException {
         IBAN iban = new IBAN();
         iban.setIBAN(IBANServiceImpl.generateIBAN(countryCode, bank));
         iban.setAccount_id(account.getID());
