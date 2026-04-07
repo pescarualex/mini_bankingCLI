@@ -1,10 +1,15 @@
 package main;
 
+import dao.AuditTrailDAO;
 import dao.BankDAO;
 import dao.ClientDAO;
+import enums.Role;
+import enums.Status;
 import exceptions.CounterExceededException;
+import model.AuditTrail;
 import model.Bank;
 import model.Client;
+import service.impl.BankServiceImpl;
 import service.impl.ClientServiceIImpl;
 import utils.Utils;
 
@@ -14,7 +19,6 @@ import java.util.List;
 
 public class Main {
 
-    static List<Client> pendingClients = new ArrayList<>();
 
     public static void main(String[] args) throws SQLException {
 
@@ -51,6 +55,7 @@ public class Main {
                     "2. Full Audit Trail\n" +
                     "3. Audit Trail by client\n" +
                     "4. Add bank\n"+
+                    "5. Create an Admin\n" +
                     "0. Exit");
             int option = Utils.readInputInteger();
 
@@ -59,6 +64,7 @@ public class Main {
                 case 2: fullAuditTrail(); break;
                 case 3: auditTrailByClient(); break;
                 case 4: addBank(); break;
+                case 5: createAnotherAdmin(); break;
                 case 0: System.exit(0);
                 default:
                     System.out.println("Incorrect selection. Please try again!");
@@ -66,6 +72,61 @@ public class Main {
         } else {
             System.out.println("You don't have access to this feature.");
         }
+    }
+
+    private static void addBank() throws SQLException {
+        BankServiceImpl.createBank();
+    }
+
+    private static void auditTrailByClient() throws SQLException {
+        System.out.println("Enter the client ID: ");
+        int clientID = Utils.readInputInteger();
+
+        List<AuditTrail> auditTrailByClientID = AuditTrailDAO.getAuditTrailByClientID(clientID);
+        for (AuditTrail entry : auditTrailByClientID){
+            System.out.println(entry);
+        }
+    }
+
+    private static void fullAuditTrail() throws SQLException {
+        List<AuditTrail> allAuditTrail = AuditTrailDAO.getAllAuditTrail();
+        for(AuditTrail entry : allAuditTrail){
+            System.out.println(entry);
+        }
+    }
+
+    private static void pendingClients() {
+        boolean continueApproving = true;
+        while(continueApproving) {
+            System.out.println("Here are all pending clients that needs approval:");
+            List<Client> clientsWhereStatusPending = ClientDAO.getClientsWhereStatusPending();
+            if(clientsWhereStatusPending.isEmpty()){
+                System.out.println("No clients pending.");
+                continueApproving = false;
+            } else {
+                for (Client client : clientsWhereStatusPending) {
+                    System.out.println(client);
+                }
+                System.out.println("To approve a client, enter the client ID:");
+                int clientID = Utils.readInputInteger();
+                ClientDAO.updateClientStatus(clientID, Status.APPROVED);
+                System.out.println("Client approved successfully!\n" +
+                        "Do you want to continue?");
+                String s = Utils.readInputString();
+                if(s.equalsIgnoreCase("no")){
+                    continueApproving = false;
+                }
+            }
+        }
+    }
+
+    private static void createAnotherAdmin() throws SQLException {
+        Client client = ClientServiceIImpl.createClient(0);
+
+        ClientDAO.updateClientRole(client.getId(), Role.ADMIN);
+        ClientDAO.updateClientStatus(client.getId(), Status.APPROVED);
+
+        System.out.println("Admin created successfully!");
     }
 
 
@@ -78,16 +139,12 @@ public class Main {
         Bank bt = BankDAO.getBankByBankName("BT");
         Bank bcr = BankDAO.getBankByBankName("BCR");
 
-        Client client;
-
         switch (option){
             case 1:
-                client = ClientServiceIImpl.createClient(bt.getID());
-                pendingClients.add(client);
+                ClientServiceIImpl.createClient(bt.getID());
                 break;
             case 2:
-                client = ClientServiceIImpl.createClient(bcr.getID());
-                pendingClients.add(client);
+                ClientServiceIImpl.createClient(bcr.getID());
                 break;
             default:
                 System.out.println("Incorrect selection. Please try again!");
@@ -140,17 +197,5 @@ public class Main {
 
     }
 
-    private static void addBank() {
-    }
 
-    private static void auditTrailByClient() {
-    }
-
-    private static void fullAuditTrail() {
-
-    }
-
-    private static void pendingClients() {
-
-    }
 }

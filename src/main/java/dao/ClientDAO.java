@@ -6,6 +6,8 @@ import enums.Status;
 import model.Client;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClientDAO{
     public static int saveClient(Client client) throws SQLException {
@@ -103,5 +105,70 @@ public class ClientDAO{
         //if no client, return null
         return null;
     }
+
+
+    public static void updateClientStatus(int clientId, Status status) {
+        String sql = "UPDATE client SET status = ? WHERE id = ?";
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setString(1, status.name());   //
+            stmt.setInt(2, clientId);    //
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void updateClientRole(int clientId, Role role) {
+        String sql = "UPDATE client SET role = ? WHERE id = ?";
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setString(1, role.name());   //
+            stmt.setInt(2, clientId);    //
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static List<Client> getClientsWhereStatusPending() {
+        String sql = "SELECT id, firstName, lastName, CNP, seriesAndNumberOfCI, " +
+                "username, password, role, status, bankID " +
+                "FROM client WHERE status = ?";
+
+        List<Client> pendingClients = new ArrayList<>();
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, "PENDING");
+
+            ResultSet resultSet = stmt.executeQuery();
+            while (resultSet.next()) {
+                Client client = new Client();
+                client.setId(resultSet.getInt("id"));
+                client.setFirstName(resultSet.getString("firstName"));
+                client.setLastName(resultSet.getString("lastName"));
+                client.setCNP(resultSet.getString("CNP"));
+                client.setSeriesAndNumberOfCI(resultSet.getString("seriesAndNumberOfCI"));
+                client.setUsername(resultSet.getString("username"));
+                client.setPassword(resultSet.getString("password"));
+                client.setRole(Role.valueOf(resultSet.getString("role").toUpperCase()));
+                client.setStatus(Status.valueOf(resultSet.getString("status").toUpperCase()));
+                client.setBankID(resultSet.getInt("bankID"));
+
+                pendingClients.add(client);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return pendingClients;
+    }
+
+
 
 }
