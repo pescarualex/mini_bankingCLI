@@ -1,6 +1,7 @@
 package dao;
 
 import db.DatabaseConnection;
+import enums.Status;
 import model.Account;
 
 import java.sql.*;
@@ -53,5 +54,19 @@ public class AccountDAO {
         }
 
         return null;
+    }
+
+    public static void updateAmmountOfMoney(int clientId, long ammountOfMoney) {
+        String sql = "UPDATE account SET amountOfMoney = ? WHERE client_id = ?";
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setLong(1, ammountOfMoney);   //
+            stmt.setInt(2, clientId);    //
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

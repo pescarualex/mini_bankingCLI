@@ -11,6 +11,8 @@ import utils.Utils;
 import java.sql.SQLException;
 import java.util.List;
 
+import static utils.Utils.readInputInteger;
+
 public class Main {
 
 
@@ -23,7 +25,7 @@ public class Main {
                     "3. Admin\n" +
                     "0. Exit");
 
-            int option = Utils.readInputInteger();
+            int option = readInputInteger();
 
             switch (option){
                 case 1: register(); break;
@@ -40,7 +42,7 @@ public class Main {
         System.out.println("Choose a bank: \n" +
                 "1. BT\n" +
                 "2. BCR");
-        int option = Utils.readInputInteger();
+        int option = readInputInteger();
 
         Bank bt = BankDAO.getBankByBankName("BT");
         Bank bcr = BankDAO.getBankByBankName("BCR");
@@ -82,7 +84,7 @@ public class Main {
                         "4. Add bank\n" +
                         "5. Create an Admin\n" +
                         "0. Exit");
-                int option = Utils.readInputInteger();
+                int option = readInputInteger();
 
                 switch (option) {
                     case 1:
@@ -120,7 +122,7 @@ public class Main {
 
         while(next) {
             System.out.println("Enter the client ID: ");
-            int clientID = Utils.readInputInteger();
+            int clientID = readInputInteger();
 
             List<AuditTrail> auditTrailByClientID = AuditTrailDAO.getAuditTrailByClientID(clientID);
             for (AuditTrail entry : auditTrailByClientID) {
@@ -155,7 +157,7 @@ public class Main {
                     System.out.println(client);
                 }
                 System.out.println("To approve a client, enter the client ID:");
-                int clientID = Utils.readInputInteger();
+                int clientID = readInputInteger();
                 ClientDAO.updateClientStatus(clientID, Status.APPROVED);
                 System.out.println("Client approved successfully!\n" +
                         "Do you want to continue?");
@@ -193,16 +195,16 @@ public class Main {
                         "3. Transfer money\n" +
                         "4. View account details\n" +
                         "5. Exit");
-                int option = Utils.readInputInteger();
+                int option = readInputInteger();
                 switch (option) {
                     case 1:
-                        depositMoney();
+                        depositMoney(clientByUsername.getId());
                         break;
                     case 2:
-                        withdrawMoney();
+                        withdrawMoney(clientByUsername.getId());
                         break;
                     case 3:
-                        transferMobey();
+                        transferMoney(clientByUsername.getId());
                         break;
                     case 4:
                         viewAccountDetails(clientByUsername.getId());
@@ -247,16 +249,61 @@ public class Main {
 
     }
 
-    private static void transferMobey() {
+    private static void transferMoney(int clientID) throws SQLException {
+        System.out.println("Enter the IBAN:");
+        String iban = Utils.readInputString();
 
+        System.out.println("Enter the account holder username: ");
+        String holderUsername = Utils.readInputString();
+
+        System.out.println("Amount of money that you want to transfer: ");
+        int ammountOfMoney = Utils.readInputInteger();
+
+        Client clientByID = ClientDAO.getClientByUsername(holderUsername);
+        if(clientByID.getUsername() != null && clientByID.getUsername().equals(holderUsername)){
+            Account accountByClientID = AccountDAO.getAccountByClientID(clientByID.getId());
+            IBAN ibanByAccountID = IbanDAO.getIbanByAccountID(accountByClientID.getID());
+            if(ibanByAccountID.getIBAN() != null && ibanByAccountID.getIBAN().equals(iban)){
+                long totalAmmountOfMoney = accountByClientID.getAmountOfMoney() + ammountOfMoney;
+                AccountDAO.updateAmmountOfMoney(clientByID.getId(), totalAmmountOfMoney);
+                System.out.println("Transfer completed successfully!");
+
+                AuditTrail auditTrail = Utils.logEntry("Transferred money to " + clientByID.getId() + ", " + clientByID.getUsername(), clientID);
+                AuditTrailDAO.saveAuditTrail(auditTrail);
+            } else {
+                System.out.println("No IBAN was found.");
+            }
+        } else {
+            System.out.println("No client was found.");
+        }
     }
 
-    private static void withdrawMoney() {
+    private static void withdrawMoney(int clientID) throws SQLException {
+        Account accountByClientID = AccountDAO.getAccountByClientID(clientID);
+        System.out.println("How much money do you want to withdraw?");
+        int money = readInputInteger();
+        long totalAmmountOfMoney = accountByClientID.getAmountOfMoney() - (long) money;
 
+        AccountDAO.updateAmmountOfMoney(clientID, totalAmmountOfMoney);
+
+        System.out.println("Withdraw successfully!");
+
+        AuditTrail auditTrail = Utils.logEntry("Withdraw ammount of money: " + money, clientID);
+        AuditTrailDAO.saveAuditTrail(auditTrail);
     }
 
-    private static void depositMoney() {
+    private static void depositMoney(int clientID) throws SQLException {
+        Account accountByClientID = AccountDAO.getAccountByClientID(clientID);
 
+        System.out.println("How much money do you want to deposit?");
+        int deposit = readInputInteger();
+        long totalAmmountOfMoney = accountByClientID.getAmountOfMoney() + (long) deposit;
+        AccountDAO.updateAmmountOfMoney(clientID, totalAmmountOfMoney);
+
+        System.out.println("Money are in account ;)");
+
+        AuditTrail auditTrail = Utils.logEntry("Deposit ammount of money: " + deposit, clientID);
+        AuditTrailDAO.saveAuditTrail(auditTrail);
     }
 
 
