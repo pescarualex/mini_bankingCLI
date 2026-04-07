@@ -34,8 +34,8 @@ public class BankDAO{
     }
 
     public static Bank getBankByClientID(int client_ID){
-        String sql = "SELECT ID, bankName, bankSwift, paymentNetwork, bankCode, account_ID, client_ID " +
-                "from bank WHERE client_ID = ?";
+        String sql = "SELECT ID, bankName, bankSwift, paymentNetwork, bankCode " +
+                "FROM bank WHERE client_ID = ?";
 
         try(Connection connection = DatabaseConnection.getConnection();
         PreparedStatement stmt = connection.prepareStatement(sql)){
@@ -62,8 +62,8 @@ public class BankDAO{
     }
 
     public static Bank getBankByBankName(String bankName){
-        String sql = "SELECT ID, bankName, bankSwift, paymentNetwork, bankCode, account_ID, client_ID " +
-                "from bank WHERE bankName = ?";
+        String sql = "SELECT ID, bankName, bankSwift, paymentNetwork, bankCode " +
+                "FROM bank WHERE bankName = ?";
 
         try(Connection connection = DatabaseConnection.getConnection();
             PreparedStatement stmt = connection.prepareStatement(sql)){

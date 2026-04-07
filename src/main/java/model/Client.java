@@ -10,6 +10,7 @@ public class Client {
     private String CNP;
     private String seriesAndNumberOfCI;
     private String username;
+    private String password;
     private Role role;
     private Status status;
     private int bankID;
@@ -62,6 +63,14 @@ public class Client {
         this.username = username;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public Role getRole() {
         return role;
     }
@@ -95,6 +104,7 @@ public class Client {
                 ", CNP='" + CNP + '\'' +
                 ", seriesAndNumberOfCI='" + seriesAndNumberOfCI + '\'' +
                 ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
                 ". role=" + role.name() + '\'' +
                 ", status=" + status.name() + '\'' +
                 ", bankID=" + bankID + '\'' +

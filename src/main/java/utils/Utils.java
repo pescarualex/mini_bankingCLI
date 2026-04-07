@@ -6,7 +6,9 @@ import model.AuditTrail;
 import java.security.SecureRandom;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Scanner;
+import java.util.Set;
 
 public class Utils {
     private static final SecureRandom secureRandom = new SecureRandom();
@@ -71,6 +73,6 @@ public class Utils {
     }
 
     public static int readInputInteger(){
-        return scanner.nextInt();
+        return Integer.parseInt(scanner.nextLine());
     }
 }

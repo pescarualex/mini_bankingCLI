@@ -2,7 +2,6 @@ package dao;
 
 import db.DatabaseConnection;
 import model.Account;
-import model.Client;
 
 import java.sql.*;
 

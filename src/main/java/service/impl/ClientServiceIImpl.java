@@ -2,6 +2,8 @@ package service.impl;
 
 import dao.AuditTrailDAO;
 import dao.ClientDAO;
+import enums.Role;
+import enums.Status;
 import model.AuditTrail;
 import model.Client;
 import utils.Utils;
@@ -14,26 +16,26 @@ public class ClientServiceIImpl {
         Client client = new Client();
 
         System.out.println("Enter first name: ");
-        String firstName = Utils.readInputString();
-        client.setFirstName(firstName);
+        client.setFirstName(Utils.readInputString());
 
         System.out.println("Enter last name: ");
-        String lastName = Utils.readInputString();
-        client.setLastName(lastName);
+        client.setLastName(Utils.readInputString());
 
         System.out.println("Enter CNP: ");
-        String CNP = Utils.readInputString();
-        client.setCNP(CNP);
+        client.setCNP(Utils.readInputString());
 
         System.out.println("Enter series and Number of CI: ");
-        String seriesAndNumberOfCI = Utils.readInputString();
-        client.setSeriesAndNumberOfCI(seriesAndNumberOfCI);
+        client.setSeriesAndNumberOfCI(Utils.readInputString());
 
         System.out.println("Set a username:");
-        String username = Utils.readInputString();
-        client.setUsername(username);
+        client.setUsername(Utils.readInputString());
+
+        System.out.println("Set a password:");
+        client.setPassword(Utils.readInputString());
 
         client.setBankID(bankID);
+        client.setRole(Role.CLIENT);
+        client.setStatus(Status.PENDING);
 
         int clientIDFromDB = ClientDAO.saveClient(client);
 
