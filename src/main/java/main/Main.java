@@ -198,16 +198,16 @@ public class Main {
                 int option = readInputInteger();
                 switch (option) {
                     case 1:
-                        depositMoney(clientByUsername.getId());
+                        depositMoney(clientByUsername);
                         break;
                     case 2:
-                        withdrawMoney(clientByUsername.getId());
+                        withdrawMoney(clientByUsername);
                         break;
                     case 3:
-                        transferMoney(clientByUsername.getId());
+                        transferMoney(clientByUsername);
                         break;
                     case 4:
-                        viewAccountDetails(clientByUsername.getId());
+                        viewAccountDetails(clientByUsername);
                         break;
                     case 5:
                         return;
@@ -220,11 +220,11 @@ public class Main {
         }
     }
 
-    private static void viewAccountDetails(int clientID) throws SQLException {
+    private static void viewAccountDetails(Client client) throws SQLException {
         System.out.print("To proceed, you need to confirm your password\n" +
                 "->");
         String password = Utils.readInputString();
-        Client clientByID = ClientDAO.getClientByID(clientID);
+        Client clientByID = ClientDAO.getClientByID(client.getId());
 
         if (password != null && clientByID.getPassword().equals(password)){
             System.out.println("Client Information:");
@@ -249,7 +249,12 @@ public class Main {
 
     }
 
-    private static void transferMoney(int clientID) throws SQLException {
+    private static void transferMoney(Client client) throws SQLException {
+        if(client.getStatus().equals(Status.PENDING)){
+            System.out.println("You are not approved yet. Please try later.");
+            return;
+        }
+
         System.out.println("Enter the IBAN:");
         String iban = Utils.readInputString();
 
@@ -266,9 +271,13 @@ public class Main {
             if(ibanByAccountID.getIBAN() != null && ibanByAccountID.getIBAN().equals(iban)){
                 long totalAmmountOfMoney = accountByClientID.getAmountOfMoney() + ammountOfMoney;
                 AccountDAO.updateAmmountOfMoney(clientByID.getId(), totalAmmountOfMoney);
+
+                Account accountByClientID1 = AccountDAO.getAccountByClientID(client.getId());
+                long currentUserAmountMoney = accountByClientID1.getAmountOfMoney() - ammountOfMoney;
+                AccountDAO.updateAmmountOfMoney(client.getId(), currentUserAmountMoney);
                 System.out.println("Transfer completed successfully!");
 
-                AuditTrail auditTrail = Utils.logEntry("Transferred money to " + clientByID.getId() + ", " + clientByID.getUsername(), clientID);
+                AuditTrail auditTrail = Utils.logEntry("Transferred money to " + clientByID.getId() + ", " + clientByID.getUsername(), client.getId());
                 AuditTrailDAO.saveAuditTrail(auditTrail);
             } else {
                 System.out.println("No IBAN was found.");
@@ -278,31 +287,41 @@ public class Main {
         }
     }
 
-    private static void withdrawMoney(int clientID) throws SQLException {
-        Account accountByClientID = AccountDAO.getAccountByClientID(clientID);
+    private static void withdrawMoney(Client client) throws SQLException {
+        if(client.getStatus().equals(Status.PENDING)){
+            System.out.println("You are not approved yet. Please try later.");
+            return;
+        }
+
+        Account accountByClientID = AccountDAO.getAccountByClientID(client.getId());
         System.out.println("How much money do you want to withdraw?");
         int money = readInputInteger();
         long totalAmmountOfMoney = accountByClientID.getAmountOfMoney() - (long) money;
 
-        AccountDAO.updateAmmountOfMoney(clientID, totalAmmountOfMoney);
+        AccountDAO.updateAmmountOfMoney(client.getId(), totalAmmountOfMoney);
 
         System.out.println("Withdraw successfully!");
 
-        AuditTrail auditTrail = Utils.logEntry("Withdraw ammount of money: " + money, clientID);
+        AuditTrail auditTrail = Utils.logEntry("Withdraw ammount of money: " + money, client.getId());
         AuditTrailDAO.saveAuditTrail(auditTrail);
     }
 
-    private static void depositMoney(int clientID) throws SQLException {
-        Account accountByClientID = AccountDAO.getAccountByClientID(clientID);
+    private static void depositMoney(Client client) throws SQLException {
+        if(client.getStatus().equals(Status.PENDING)){
+            System.out.println("You are not approved yet. Please try later.");
+            return;
+        }
+
+        Account accountByClientID = AccountDAO.getAccountByClientID(client.getId());
 
         System.out.println("How much money do you want to deposit?");
         int deposit = readInputInteger();
         long totalAmmountOfMoney = accountByClientID.getAmountOfMoney() + (long) deposit;
-        AccountDAO.updateAmmountOfMoney(clientID, totalAmmountOfMoney);
+        AccountDAO.updateAmmountOfMoney(client.getId(), totalAmmountOfMoney);
 
         System.out.println("Money are in account ;)");
 
-        AuditTrail auditTrail = Utils.logEntry("Deposit ammount of money: " + deposit, clientID);
+        AuditTrail auditTrail = Utils.logEntry("Deposit ammount of money: " + deposit, client.getId());
         AuditTrailDAO.saveAuditTrail(auditTrail);
     }
 
