@@ -1,8 +1,6 @@
 package model;
 
 
-import utils.Utils;
-
 public class Account {
     private int ID;
     private long amountOfMoney;

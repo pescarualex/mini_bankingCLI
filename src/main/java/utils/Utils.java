@@ -1,9 +1,11 @@
 package utils;
 
 import dao.AuditTrailDAO;
+import exceptions.AuditTrailNotSavedException;
 import model.AuditTrail;
 
 import java.security.SecureRandom;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -37,22 +39,26 @@ public class Utils {
     }
 
 
-    public static AuditTrail logEntry(String message, int clientID) throws SQLException {
+    public static AuditTrail logEntry(String message, int clientID, Connection connection) throws AuditTrailNotSavedException {
         AuditTrail auditTrail = new AuditTrail();
         auditTrail.setEntry(message);
         auditTrail.setTimestamp(LocalDate.now());
         auditTrail.setClientID(clientID);
 
-        AuditTrailDAO.saveAuditTrail(auditTrail);
+        try {
+            AuditTrailDAO.saveAuditTrail(auditTrail, connection);
+        } catch (SQLException e) {
+            throw new AuditTrailNotSavedException("Audit Trail not saved.", e);
+        }
         return auditTrail;
     }
 
-    public static AuditTrail logEntry(String message) throws SQLException {
+    public static AuditTrail logEntry(String message, Connection connection) throws SQLException {
         AuditTrail auditTrail = new AuditTrail();
         auditTrail.setEntry(message);
         auditTrail.setTimestamp(LocalDate.now());
 
-        AuditTrailDAO.saveAuditTrail(auditTrail);
+        AuditTrailDAO.saveAuditTrail(auditTrail, connection);
         return auditTrail;
     }
 

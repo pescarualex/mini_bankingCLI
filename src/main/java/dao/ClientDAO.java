@@ -10,13 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientDAO{
-    public static int saveClient(Client client) throws SQLException {
+    public static int saveClient(Client client, Connection connection) throws SQLException {
         String sql = "INSERT INTO client " +
                 "(firstName, lastName, CNP, seriesAndNumberOfCI, username, password, role, status, bankID) " +
                 "VALUES (?,?,?,?,?,?,?,?,?)";
 
-        try(Connection connection = DatabaseConnection.getConnection();
-            PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
+        try( PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
             stmt.setString(1, client.getFirstName());
             stmt.setString(2, client.getLastName());
             stmt.setString(3, client.getCNP());
@@ -35,18 +34,14 @@ public class ClientDAO{
                 client.setId(generatedId);
                 return generatedId;
             }
-        } catch (SQLException e){
-            e.printStackTrace();
         }
-
         throw new SQLException("Failed to retrieve generated ID.");
     }
 
-    public static Client getClientByID(int clientID) throws SQLException {
+    public static Client getClientByID(int clientID, Connection connection) throws SQLException {
         String sql = "SELECT id, firstName, lastName, CNP, seriesAndNumberOfCI, username, password, role, status, bankID FROM client WHERE id=?";
 
-        try(Connection connection = DatabaseConnection.getConnection();
-            PreparedStatement stmt = connection.prepareStatement(sql)){
+        try( PreparedStatement stmt = connection.prepareStatement(sql)){
             stmt.setInt(1, clientID);
 
             ResultSet resultSet = stmt.executeQuery();
@@ -65,20 +60,14 @@ public class ClientDAO{
 
                 return client;
             }
-
-        } catch (SQLException e){
-            e.printStackTrace();
         }
-
-        //if no client, return null
         return null;
     }
 
-    public static Client getClientByUsername(String username) throws SQLException {
+    public static Client getClientByUsername(String username, Connection connection) throws SQLException {
         String sql = "SELECT id, firstName, lastName, CNP, seriesAndNumberOfCI, username, password, role, status, bankID FROM client WHERE username=?";
 
-        try(Connection connection = DatabaseConnection.getConnection();
-            PreparedStatement stmt = connection.prepareStatement(sql)){
+        try(PreparedStatement stmt = connection.prepareStatement(sql)){
             stmt.setString(1, username);
 
             ResultSet resultSet = stmt.executeQuery();
@@ -97,54 +86,41 @@ public class ClientDAO{
 
                 return client;
             }
-
-        } catch (SQLException e){
-            e.printStackTrace();
         }
-
-        //if no client, return null
         return null;
     }
 
 
-    public static void updateClientStatus(int clientId, Status status) {
+    public static void updateClientStatus(int clientId, Status status, Connection connection) throws SQLException{
         String sql = "UPDATE client SET status = ? WHERE id = ?";
 
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try ( PreparedStatement stmt = connection.prepareStatement(sql)) {
 
             stmt.setString(1, status.name());   //
             stmt.setInt(2, clientId);    //
             stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
-    public static void updateClientRole(int clientId, Role role) {
+    public static void updateClientRole(int clientId, Role role, Connection connection) throws SQLException {
         String sql = "UPDATE client SET role = ? WHERE id = ?";
 
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
-
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, role.name());   //
             stmt.setInt(2, clientId);    //
             stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
 
-    public static List<Client> getClientsWhereStatusPending() {
+    public static List<Client> getClientsWhereStatusPending(Connection connection) throws SQLException{
         String sql = "SELECT id, firstName, lastName, CNP, seriesAndNumberOfCI, " +
                 "username, password, role, status, bankID " +
                 "FROM client WHERE status = ?";
 
         List<Client> pendingClients = new ArrayList<>();
 
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, "PENDING");
 
             ResultSet resultSet = stmt.executeQuery();
@@ -163,8 +139,6 @@ public class ClientDAO{
 
                 pendingClients.add(client);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         return pendingClients;
     }

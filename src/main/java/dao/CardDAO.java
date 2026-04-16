@@ -8,13 +8,12 @@ import java.sql.*;
 import java.time.LocalDate;
 
 public class CardDAO {
-    public static int saveCard(Card card) throws SQLException {
+    public static int saveCard(Card card, Connection connection) throws SQLException {
         String sql = "INSERT INTO card " +
                 "(cardNumber, pin_code, expirationDate, CVV, account_ID) " +
                 "VALUES (?,?,?,?,?)";
 
-        try(Connection connection = DatabaseConnection.getConnection();
-            PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
+        try( PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
             stmt.setString(1, card.getCardNumber());
             stmt.setString(2, card.getPin_code());
             stmt.setString(3, String.valueOf(card.getExpirationDate()));
@@ -29,20 +28,16 @@ public class CardDAO {
                 card.setId(generatedId);   // actualizezi obiectul
                 return generatedId;
             }
-        } catch (SQLException e){
-            e.printStackTrace();
         }
-
         throw new SQLException("Failed to retrieve generated ID.");
     }
 
 
-    public static Card getCardByAccountID(int accountID) throws SQLException {
+    public static Card getCardByAccountID(int accountID, Connection connection) throws SQLException {
         String sql = "SELECT id, cardNumber, pin_code, expirationDate, CVV, account_ID" +
                 " FROM card WHERE account_ID = ?";
 
-        try(Connection connection = DatabaseConnection.getConnection();
-            PreparedStatement stmt = connection.prepareStatement(sql)){
+        try( PreparedStatement stmt = connection.prepareStatement(sql)){
             stmt.setInt(1, accountID);
 
             ResultSet resultSet = stmt.executeQuery();
@@ -57,10 +52,7 @@ public class CardDAO {
 
                 return card;
             }
-        } catch (SQLException e){
-            e.printStackTrace();
         }
-
         return null;
     }
 }

@@ -7,15 +7,14 @@ import model.Account;
 import java.sql.*;
 
 public class AccountDAO {
-    public static int saveAccount(Account account) throws SQLException {
+    public static int saveAccount(Account account, Connection connection) throws SQLException {
         String sql = "INSERT INTO account " +
                 "(client_id, amountOfMoney) " +
                 "VALUES (?,?)";
 
-        try(Connection connection = DatabaseConnection.getConnection();
-            PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
+        try( PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
             stmt.setInt(1, account.getClient_ID());
-            stmt.setString(2, String.valueOf(account.getAmountOfMoney()));
+            stmt.setDouble(2, account.getAmountOfMoney());
 
             stmt.executeUpdate();
 
@@ -25,19 +24,16 @@ public class AccountDAO {
                 account.setID(generatedId);   // actualizezi obiectul
                 return generatedId;
             }
-        } catch (SQLException e){
-            e.printStackTrace();
         }
 
         throw new SQLException("Failed to retrieve generated ID.");
     }
 
 
-    public static Account getAccountByClientID(int clientID) throws SQLException {
+    public static Account getAccountByClientID(int clientID, Connection connection) throws SQLException {
         String sql = "SELECT id, client_ID, amountOfMoney FROM account WHERE client_ID = ?";
 
-        try(Connection connection = DatabaseConnection.getConnection();
-        PreparedStatement stmt = connection.prepareStatement(sql)){
+        try( PreparedStatement stmt = connection.prepareStatement(sql)){
             stmt.setInt(1, clientID);
 
             ResultSet resultSet = stmt.executeQuery();
@@ -49,24 +45,19 @@ public class AccountDAO {
 
                 return account;
             }
-        } catch (SQLException e){
-            e.printStackTrace();
         }
 
         return null;
     }
 
-    public static void updateAmmountOfMoney(int clientId, long ammountOfMoney) {
+    public static void updateAmmountOfMoney(int clientId, long ammountOfMoney, Connection connection) throws SQLException{
         String sql = "UPDATE account SET amountOfMoney = ? WHERE client_id = ?";
 
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try ( PreparedStatement stmt = connection.prepareStatement(sql)) {
 
             stmt.setLong(1, ammountOfMoney);   //
             stmt.setInt(2, clientId);    //
             stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 }

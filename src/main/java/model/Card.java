@@ -1,7 +1,5 @@
 package model;
 
-import utils.Utils;
-
 import java.time.LocalDate;
 
 public class Card {

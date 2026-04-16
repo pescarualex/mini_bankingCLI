@@ -1,34 +1,45 @@
 package service.impl;
 
 
-import dao.AuditTrailDAO;
 import dao.IbanDAO;
+import exceptions.AuditTrailNotSavedException;
 import exceptions.CounterExceededException;
+import exceptions.IBANNotSavedException;
 import model.Account;
-import model.AuditTrail;
 import model.Bank;
 import model.IBAN;
 import utils.Utils;
 
 import java.math.BigInteger;
+import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class IBANServiceImpl {
     private static final Set<String> UNIQUE_IBANs = new HashSet<>();
     private final BankServiceImpl bankService = new BankServiceImpl();
     private static Map<String, Integer> MAP_VALUES;
 
-    public static IBAN createIban(String countryCode, Bank bank, Account account) throws CounterExceededException, SQLException {
+    public static IBAN createIban(String countryCode, Bank bank, Account account, Connection connection) throws CounterExceededException, IBANNotSavedException, AuditTrailNotSavedException {
         IBAN iban = new IBAN();
         iban.setIBAN(IBANServiceImpl.generateIBAN(countryCode, bank));
         iban.setAccount_id(account.getID());
 
-        IbanDAO.saveIBAN(iban);
+        try {
+            IbanDAO.saveIBAN(iban, connection);
+        } catch (SQLException e) {
+            throw new IBANNotSavedException("Iban not saved", e);
+        }
 
-        AuditTrail auditTrail = Utils.logEntry("Created IBAN for account: " + account.getID() +
-                " at bank: " + bank.getBankName(), account.getClient_ID());
-        AuditTrailDAO.saveAuditTrail(auditTrail);
+        try {
+            Utils.logEntry("Created IBAN for account: " + account.getID() +
+                    " at bank: " + bank.getBankName(), account.getClient_ID(), connection);
+        } catch (AuditTrailNotSavedException e) {
+            System.out.println("Audit trail entry not saved for IBAN creation.");
+        }
 
         return iban;
     }

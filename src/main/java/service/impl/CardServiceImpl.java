@@ -1,13 +1,13 @@
 package service.impl;
 
-import dao.AuditTrailDAO;
 import dao.CardDAO;
+import exceptions.AuditTrailNotSavedException;
 import model.Account;
-import model.AuditTrail;
 import model.Bank;
 import model.Card;
 import utils.Utils;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -17,7 +17,7 @@ public class CardServiceImpl {
 
     private static final Set<String> UNIQUE_CARD_NUMBERS = new HashSet<>();
 
-    public static Card createCard(Bank bank, Account account) throws SQLException {
+    public static Card createCard(Bank bank, Account account, Connection connection) throws SQLException {
         Card card = new Card();
         card.setCardNumber(CardServiceImpl.generateCardNumber(bank));
         card.setPin_code(CardServiceImpl.generatePinCode());
@@ -25,11 +25,14 @@ public class CardServiceImpl {
         card.setExpirationDate(CardServiceImpl.getCardExpirationDate());
         card.setAccount_ID(account.getID());
 
-        CardDAO.saveCard(card);
+        CardDAO.saveCard(card, connection);
 
-        AuditTrail auditTrail = Utils.logEntry("Created card for account: " + account.getID() +
-                " at bank: " + bank.getBankName(), account.getClient_ID());
-        AuditTrailDAO.saveAuditTrail(auditTrail);
+        try {
+            Utils.logEntry("Created card for account: " + account.getID() +
+                    " at bank: " + bank.getBankName(), account.getClient_ID(), connection);
+        } catch (AuditTrailNotSavedException e) {
+            System.out.println("Audit trail entry not saved for card creation.");
+        }
 
         return card;
     }
