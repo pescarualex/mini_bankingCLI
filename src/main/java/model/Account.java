@@ -2,26 +2,25 @@ package model;
 
 
 public class Account {
-    private int ID;
+    private int id;
     private long amountOfMoney;
-    private int client_ID;
+    private int clientId;
 
-    public int getID() {
-        return ID;
+    public int getId() {
+        return id;
     }
 
-    public void setID(int ID){
-        this.ID = ID;
+    public void setId(int id){
+        this.id = id;
     }
 
-    public int getClient_ID(){
-        return client_ID;
+    public int getClientId(){
+        return clientId;
     }
 
-    public void setClient_ID(int client_ID){
-        this.client_ID = client_ID;
+    public void setClientId(int clientId){
+        this.clientId = clientId;
     }
-
 
     public long getAmountOfMoney(){
         return amountOfMoney;
@@ -35,8 +34,8 @@ public class Account {
     @Override
     public String toString() {
         return "Account{" +
-                "ID=" + ID +
-                ", client_ID=" + client_ID +
+                "ID=" + id +
+                ", client_ID=" + clientId +
                 ", amountOfMoney=" + amountOfMoney +
                 '}';
     }

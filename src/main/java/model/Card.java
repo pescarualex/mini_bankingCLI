@@ -5,10 +5,10 @@ import java.time.LocalDate;
 public class Card {
     private int id;
     private String cardNumber;
-    private String pin_code;
+    private String pinCode;
     private LocalDate expirationDate;
     private String CVV;
-    private int account_ID;
+    private int accountId;
 
     public int getId() {
         return id;
@@ -26,12 +26,12 @@ public class Card {
         this.cardNumber = cardNumber;
     }
 
-    public String getPin_code() {
-        return pin_code;
+    public String getPinCode() {
+        return pinCode;
     }
 
-    public void setPin_code(String pin_code) {
-        this.pin_code = pin_code;
+    public void setPinCode(String pinCode) {
+        this.pinCode = pinCode;
     }
 
     public LocalDate getExpirationDate() {
@@ -50,12 +50,12 @@ public class Card {
         this.CVV = CVV;
     }
 
-    public int getAccount_ID() {
-        return account_ID;
+    public int getAccountId() {
+        return accountId;
     }
 
-    public void setAccount_ID(int account_ID) {
-        this.account_ID = account_ID;
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
     }
 
     @Override
@@ -63,10 +63,10 @@ public class Card {
         return "Card{" +
                 "id=" + id +
                 ", cardNumber='" + cardNumber + '\'' +
-                ", pin_code='" + pin_code + '\'' +
+                ", pin_code='" + pinCode + '\'' +
                 ", expirationDate=" + expirationDate +
                 ", CVV='" + CVV + '\'' +
-                ", account_ID=" + account_ID +
+                ", account_ID=" + accountId +
                 '}';
     }
 }

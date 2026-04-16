@@ -20,16 +20,16 @@ public class CardServiceImpl {
     public static Card createCard(Bank bank, Account account, Connection connection) throws SQLException {
         Card card = new Card();
         card.setCardNumber(CardServiceImpl.generateCardNumber(bank));
-        card.setPin_code(CardServiceImpl.generatePinCode());
+        card.setPinCode(CardServiceImpl.generatePinCode());
         card.setCVV(CardServiceImpl.generateCVV());
         card.setExpirationDate(CardServiceImpl.getCardExpirationDate());
-        card.setAccount_ID(account.getID());
+        card.setAccountId(account.getId());
 
         CardDAO.saveCard(card, connection);
 
         try {
-            Utils.logEntry("Created card for account: " + account.getID() +
-                    " at bank: " + bank.getBankName(), account.getClient_ID(), connection);
+            Utils.logEntry("Created card for account: " + account.getId() +
+                    " at bank: " + bank.getBankName(), account.getClientId(), connection);
         } catch (AuditTrailNotSavedException e) {
             System.out.println("Audit trail entry not saved for card creation.");
         }

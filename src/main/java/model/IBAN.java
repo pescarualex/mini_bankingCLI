@@ -3,7 +3,7 @@ package model;
 public class IBAN {
     private int id;
     private String IBAN;
-    private int account_id;
+    private int accountId;
 
     public int getId() {
         return id;
@@ -21,12 +21,12 @@ public class IBAN {
         this.IBAN = IBAN;
     }
 
-    public int getAccount_id() {
-        return account_id;
+    public int getAccountId() {
+        return accountId;
     }
 
-    public void setAccount_id(int account_id) {
-        this.account_id = account_id;
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class IBAN {
         return "IBAN{" +
                 "id=" + id +
                 ", IBAN='" + IBAN + '\'' +
-                ", account_id='" + account_id + '\'' +
+                ", account_id='" + accountId + '\'' +
                 '}';
     }
 }

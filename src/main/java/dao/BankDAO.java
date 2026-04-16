@@ -24,7 +24,7 @@ public class BankDAO{
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
                 int generatedId = rs.getInt(1);
-                bank.setID(generatedId);   // actualizezi obiectul
+                bank.setID(generatedId);
                 return generatedId;
             }
         }
@@ -32,7 +32,7 @@ public class BankDAO{
     }
 
     public static Bank getBankByClientID(int client_ID, Connection connection) throws SQLException {
-        String sql = "SELECT ID, bankName, bankSwift, paymentNetwork, bankCode " +
+        String sql = "SELECT id, bankName, bankSwift, paymentNetwork, bankCode " +
                 "FROM bank WHERE client_ID = ?";
 
         try( PreparedStatement stmt = connection.prepareStatement(sql)){
@@ -55,7 +55,7 @@ public class BankDAO{
     }
 
     public static Bank getBankByBankName(String bankName, Connection connection) throws SQLException {
-        String sql = "SELECT ID, bankName, bankSwift, paymentNetwork, bankCode " +
+        String sql = "SELECT id, bankName, bankSwift, paymentNetwork, bankCode " +
                 "FROM bank WHERE bankName = ?";
 
         try( PreparedStatement stmt = connection.prepareStatement(sql)){

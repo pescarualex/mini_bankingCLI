@@ -99,7 +99,6 @@ public class ClientServiceIImpl {
             try {
                 if (connection != null) {
                     connection.setAutoCommit(true);
-                    connection.close();
                 }
             } catch (SQLException e) {
                 e.printStackTrace();

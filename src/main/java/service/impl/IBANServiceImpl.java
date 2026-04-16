@@ -26,7 +26,7 @@ public class IBANServiceImpl {
     public static IBAN createIban(String countryCode, Bank bank, Account account, Connection connection) throws CounterExceededException, IBANNotSavedException, AuditTrailNotSavedException {
         IBAN iban = new IBAN();
         iban.setIBAN(IBANServiceImpl.generateIBAN(countryCode, bank));
-        iban.setAccount_id(account.getID());
+        iban.setAccountId(account.getId());
 
         try {
             IbanDAO.saveIBAN(iban, connection);
@@ -35,8 +35,8 @@ public class IBANServiceImpl {
         }
 
         try {
-            Utils.logEntry("Created IBAN for account: " + account.getID() +
-                    " at bank: " + bank.getBankName(), account.getClient_ID(), connection);
+            Utils.logEntry("Created IBAN for account: " + account.getId() +
+                    " at bank: " + bank.getBankName(), account.getClientId(), connection);
         } catch (AuditTrailNotSavedException e) {
             System.out.println("Audit trail entry not saved for IBAN creation.");
         }

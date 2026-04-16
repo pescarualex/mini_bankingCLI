@@ -24,19 +24,14 @@ public class AccountServiceImpl {
     public static Account createAccount(Client client, Connection connection) throws SQLException {
         Account account = new Account();
         account.setAmountOfMoney(0L);
-        account.setClient_ID(client.getId());
+        account.setClientId(client.getId());
 
-        if(account != null) {
-            AccountDAO.saveAccount(account, connection);
-            try {
-                Utils.logEntry("Account created for: " + client.getId(), client.getId(), connection);
-            } catch (AuditTrailNotSavedException e) {
-                System.out.println("Audit trail entry not saved.");
-            }
-        } else {
-            System.out.println("Incorrect account");
+        AccountDAO.saveAccount(account, connection);
+        try {
+            Utils.logEntry("Account created for: " + client.getId(), client.getId(), connection);
+        } catch (AuditTrailNotSavedException e) {
+            System.out.println("Audit trail entry not saved.");
         }
-
         return account;
     }
 
@@ -53,7 +48,8 @@ public class AccountServiceImpl {
                 System.out.println("Client Information:");
                 System.out.println("First name: " + clientByID.getFirstName() + ", Last name: " + clientByID.getLastName() + "\n" +
                         "CNP: " + clientByID.getCNP() + ", Series and CI Number: " + clientByID.getSeriesAndNumberOfCI() + "\n" +
-                        "Username: " + clientByID.getUsername() + ", Role: " + clientByID.getRole().name() + ", Status: " + clientByID.getStatus().name() + "\n" +
+                        "Username: " + clientByID.getUsername() + ", Role: " + clientByID.getRole().name() + ", Status: " +
+                        clientByID.getStatus().name() + "\n" +
                         "Bank ID: " + clientByID.getBankID());
 
                 Account accountByClientID = AccountDAO.getAccountByClientID(clientByID.getId(), connection);
@@ -61,12 +57,13 @@ public class AccountServiceImpl {
                 System.out.println("Money: " + accountByClientID.getAmountOfMoney());
 
                 System.out.println("Card information: ");
-                Card cardByAccountID = CardDAO.getCardByAccountID(accountByClientID.getID(), connection);
-                System.out.println("Card Number: " + cardByAccountID.getCardNumber() + ", Card Expiration Period: " + cardByAccountID.getExpirationDate() + "\n" +
-                        "Card Pin Code: " + cardByAccountID.getPin_code() + ", Card CVV: " + cardByAccountID.getCVV());
+                Card cardByAccountID = CardDAO.getCardByAccountID(accountByClientID.getId(), connection);
+                System.out.println("Card Number: " + cardByAccountID.getCardNumber() + ", Card Expiration Period: " +
+                        cardByAccountID.getExpirationDate() + "\n" +
+                        "Card Pin Code: " + cardByAccountID.getPinCode() + ", Card CVV: " + cardByAccountID.getCVV());
 
                 System.out.println("IBAN information: ");
-                IBAN ibanByAccountID = IbanDAO.getIbanByAccountID(accountByClientID.getID(), connection);
+                IBAN ibanByAccountID = IbanDAO.getIbanByAccountID(accountByClientID.getId(), connection);
                 System.out.println("IBAN: " + ibanByAccountID.getIBAN());
             }
         } catch (SQLException e){
@@ -109,7 +106,7 @@ public class AccountServiceImpl {
                     return;
                 } else if (clientByID.getUsername() != null && clientByID.getUsername().equals(holderUsername)) {
                     Account accountByClientID = AccountDAO.getAccountByClientID(clientByID.getId(), connection);
-                    IBAN ibanByAccountID = IbanDAO.getIbanByAccountID(accountByClientID.getID(), connection);
+                    IBAN ibanByAccountID = IbanDAO.getIbanByAccountID(accountByClientID.getId(), connection);
                     if (ibanByAccountID.getIBAN() != null && ibanByAccountID.getIBAN().equals(iban)) {
                         long totalAmmountOfMoney = accountByClientID.getAmountOfMoney() + ammountOfMoney;
                         AccountDAO.updateAmmountOfMoney(clientByID.getId(), totalAmmountOfMoney, connection);
@@ -152,7 +149,7 @@ public class AccountServiceImpl {
         }
     }
 
-    public void withdrawMoney(Client client, Connection connection) throws AccountNotFoundException, AuditTrailNotSavedException {
+    public void withdrawMoney(Client client, Connection connection) throws AccountNotFoundException{
         if(client.getStatus().equals(Status.PENDING)){
             System.out.println("You are not approved yet. Please try later.");
             return;

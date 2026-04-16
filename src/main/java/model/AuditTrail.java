@@ -7,7 +7,7 @@ public class AuditTrail {
     private int id;
     private String entry;
     private LocalDate timestamp;
-    private int clientID;
+    private int clientId;
 
     public int getId() {
         return id;
@@ -33,12 +33,12 @@ public class AuditTrail {
         this.timestamp = timestamp;
     }
 
-    public int getClientID() {
-        return clientID;
+    public int getClientId() {
+        return clientId;
     }
 
-    public void setClientID(int clientID) {
-        this.clientID = clientID;
+    public void setClientId(int clientId) {
+        this.clientId = clientId;
     }
 
     @Override
@@ -47,7 +47,7 @@ public class AuditTrail {
                 "id=" + id +
                 ", entry='" + entry + '\'' +
                 ", timestamp=" + timestamp +
-                ", clientID=" + clientID +
+                ", clientID=" + clientId +
                 '}';
     }
 }

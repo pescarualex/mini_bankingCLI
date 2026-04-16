@@ -1,7 +1,5 @@
 package dao;
 
-import db.DatabaseConnection;
-import enums.Status;
 import model.Account;
 
 import java.sql.*;
@@ -9,11 +7,11 @@ import java.sql.*;
 public class AccountDAO {
     public static int saveAccount(Account account, Connection connection) throws SQLException {
         String sql = "INSERT INTO account " +
-                "(client_id, amountOfMoney) " +
+                "(clientId, amountOfMoney) " +
                 "VALUES (?,?)";
 
         try( PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
-            stmt.setInt(1, account.getClient_ID());
+            stmt.setInt(1, account.getClientId());
             stmt.setDouble(2, account.getAmountOfMoney());
 
             stmt.executeUpdate();
@@ -21,7 +19,7 @@ public class AccountDAO {
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
                 int generatedId = rs.getInt(1);
-                account.setID(generatedId);   // actualizezi obiectul
+                account.setId(generatedId);   // actualizezi obiectul
                 return generatedId;
             }
         }
@@ -31,7 +29,7 @@ public class AccountDAO {
 
 
     public static Account getAccountByClientID(int clientID, Connection connection) throws SQLException {
-        String sql = "SELECT id, client_ID, amountOfMoney FROM account WHERE client_ID = ?";
+        String sql = "SELECT id, clientId, amountOfMoney FROM account WHERE clientId = ?";
 
         try( PreparedStatement stmt = connection.prepareStatement(sql)){
             stmt.setInt(1, clientID);
@@ -39,8 +37,8 @@ public class AccountDAO {
             ResultSet resultSet = stmt.executeQuery();
             if(resultSet.next()){
                 Account account = new Account();
-                account.setID(resultSet.getInt("id"));
-                account.setClient_ID(resultSet.getInt("client_ID"));
+                account.setId(resultSet.getInt("id"));
+                account.setClientId(resultSet.getInt("clientId"));
                 account.setAmountOfMoney(resultSet.getLong("amountOfMoney"));
 
                 return account;
@@ -51,7 +49,7 @@ public class AccountDAO {
     }
 
     public static void updateAmmountOfMoney(int clientId, long ammountOfMoney, Connection connection) throws SQLException{
-        String sql = "UPDATE account SET amountOfMoney = ? WHERE client_id = ?";
+        String sql = "UPDATE account SET amountOfMoney = ? WHERE clientId = ?";
 
         try ( PreparedStatement stmt = connection.prepareStatement(sql)) {
 

@@ -43,7 +43,7 @@ public class Utils {
         AuditTrail auditTrail = new AuditTrail();
         auditTrail.setEntry(message);
         auditTrail.setTimestamp(LocalDate.now());
-        auditTrail.setClientID(clientID);
+        auditTrail.setClientId(clientID);
 
         try {
             AuditTrailDAO.saveAuditTrail(auditTrail, connection);
