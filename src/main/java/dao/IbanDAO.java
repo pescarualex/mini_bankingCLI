@@ -6,7 +6,7 @@ import java.sql.*;
 
 public class IbanDAO {
 
-    public static int saveIBAN(IBAN iban, Connection connection) throws SQLException {
+    public int saveIBAN(IBAN iban, Connection connection) throws SQLException {
         String sql = "INSERT INTO iban " +
                 "(IBAN, accountId) " +
                 "VALUES (?,?)";
@@ -28,7 +28,7 @@ public class IbanDAO {
     }
 
 
-    public static IBAN getIbanByAccountID(int accountID, Connection connection) throws SQLException {
+    public IBAN getIbanByAccountID(int accountID, Connection connection) throws SQLException {
         String sql = "SELECT id, IBAN, accountId" +
                 " FROM iban WHERE accountId = ?";
 

@@ -1,12 +1,13 @@
 package model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class AuditTrail {
 
     private int id;
     private String entry;
-    private LocalDate timestamp;
+    private LocalDateTime timestamp;
     private int clientId;
 
     public int getId() {
@@ -25,11 +26,11 @@ public class AuditTrail {
         this.entry = entry;
     }
 
-    public LocalDate getTimestamp() {
+    public LocalDateTime getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(LocalDate timestamp) {
+    public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
     }
 

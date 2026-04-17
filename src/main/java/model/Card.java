@@ -63,9 +63,7 @@ public class Card {
         return "Card{" +
                 "id=" + id +
                 ", cardNumber='" + cardNumber + '\'' +
-                ", pin_code='" + pinCode + '\'' +
                 ", expirationDate=" + expirationDate +
-                ", CVV='" + CVV + '\'' +
                 ", account_ID=" + accountId +
                 '}';
     }

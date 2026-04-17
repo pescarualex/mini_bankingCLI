@@ -2,9 +2,11 @@ package service.impl;
 
 import dao.CardDAO;
 import exceptions.AuditTrailNotSavedException;
+import exceptions.CardNotSavedException;
 import model.Account;
 import model.Bank;
 import model.Card;
+import service.CardService;
 import utils.Utils;
 
 import java.sql.Connection;
@@ -13,19 +15,30 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CardServiceImpl {
+public class CardServiceImpl implements CardService {
+
+    private final CardDAO cardDAO;
+
+    public CardServiceImpl(CardDAO cardDAO){
+        this.cardDAO = cardDAO;
+    }
 
     private static final Set<String> UNIQUE_CARD_NUMBERS = new HashSet<>();
 
-    public static Card createCard(Bank bank, Account account, Connection connection) throws SQLException {
+    @Override
+    public Card createCard(Bank bank, Account account, Connection connection) throws CardNotSavedException {
         Card card = new Card();
-        card.setCardNumber(CardServiceImpl.generateCardNumber(bank));
-        card.setPinCode(CardServiceImpl.generatePinCode());
-        card.setCVV(CardServiceImpl.generateCVV());
-        card.setExpirationDate(CardServiceImpl.getCardExpirationDate());
+        card.setCardNumber(generateCardNumber(bank));
+        card.setPinCode(generatePinCode());
+        card.setCVV(generateCVV());
+        card.setExpirationDate(getCardExpirationDate());
         card.setAccountId(account.getId());
 
-        CardDAO.saveCard(card, connection);
+        try {
+            cardDAO.saveCard(card, connection);
+        } catch (SQLException e) {
+            throw new CardNotSavedException("Card not saved.", e);
+        }
 
         try {
             Utils.logEntry("Created card for account: " + account.getId() +
@@ -39,7 +52,8 @@ public class CardServiceImpl {
 
 
     /// first digit identifies the Visa or Mastercard
-    public static String generateCardNumber(Bank bank){
+    @Override
+    public String generateCardNumber(Bank bank){
         StringBuilder initialCardNumber = new StringBuilder();
         StringBuilder cardNumberProcessed = new StringBuilder();
 
@@ -102,15 +116,18 @@ public class CardServiceImpl {
         }
     }
 
-    public static String generatePinCode(){
+    @Override
+    public String generatePinCode(){
         return Utils.generateNumbers(4);
     }
 
-    public static String generateCVV(){
+    @Override
+    public String generateCVV(){
         return Utils.generateNumbers(3);
     }
 
-    public static LocalDate getCardExpirationDate(){
+    @Override
+    public LocalDate getCardExpirationDate(){
         LocalDate date = LocalDate.now();
         return date.plusYears(5L);
     }

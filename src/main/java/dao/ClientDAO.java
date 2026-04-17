@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientDAO{
-    public static int saveClient(Client client, Connection connection) throws SQLException {
+    public int saveClient(Client client, Connection connection) throws SQLException {
         String sql = "INSERT INTO client " +
                 "(firstName, lastName, CNP, seriesAndNumberOfCI, username, password, role, status, bankID) " +
                 "VALUES (?,?,?,?,?,?,?,?,?)";
@@ -38,7 +38,7 @@ public class ClientDAO{
         throw new SQLException("Failed to retrieve generated ID.");
     }
 
-    public static Client getClientByID(int clientID, Connection connection) throws SQLException {
+    public Client getClientByID(int clientID, Connection connection) throws SQLException {
         String sql = "SELECT id, firstName, lastName, CNP, seriesAndNumberOfCI, username, password, role, status, bankID FROM client WHERE id=?";
 
         try( PreparedStatement stmt = connection.prepareStatement(sql)){
@@ -64,7 +64,7 @@ public class ClientDAO{
         return null;
     }
 
-    public static Client getClientByUsername(String username, Connection connection) throws SQLException {
+    public Client getClientByUsername(String username, Connection connection) throws SQLException {
         String sql = "SELECT id, firstName, lastName, CNP, seriesAndNumberOfCI, username, password, role, status, bankID FROM client WHERE username=?";
 
         try(PreparedStatement stmt = connection.prepareStatement(sql)){
@@ -91,7 +91,7 @@ public class ClientDAO{
     }
 
 
-    public static void updateClientStatus(int clientId, Status status, Connection connection) throws SQLException{
+    public void updateClientStatus(int clientId, Status status, Connection connection) throws SQLException{
         String sql = "UPDATE client SET status = ? WHERE id = ?";
 
         try ( PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -102,7 +102,7 @@ public class ClientDAO{
         }
     }
 
-    public static void updateClientRole(int clientId, Role role, Connection connection) throws SQLException {
+    public void updateClientRole(int clientId, Role role, Connection connection) throws SQLException {
         String sql = "UPDATE client SET role = ? WHERE id = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -113,7 +113,7 @@ public class ClientDAO{
     }
 
 
-    public static List<Client> getClientsWhereStatusPending(Connection connection) throws SQLException{
+    public List<Client> getClientsWhereStatusPending(Connection connection) throws SQLException{
         String sql = "SELECT id, firstName, lastName, CNP, seriesAndNumberOfCI, " +
                 "username, password, role, status, bankID " +
                 "FROM client WHERE status = ?";

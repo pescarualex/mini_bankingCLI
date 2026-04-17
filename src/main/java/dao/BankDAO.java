@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BankDAO{
-    public static int saveBank(Bank bank, Connection connection) throws SQLException {
+    public int saveBank(Bank bank, Connection connection) throws SQLException {
         String sql = "INSERT INTO bank " +
                 "(bankName, bankSwift, paymentNetwork, bankCode) " +
                 "VALUES (?,?,?,?)";
@@ -31,7 +31,7 @@ public class BankDAO{
         throw new SQLException("Failed to retrieve generated ID.");
     }
 
-    public static Bank getBankByClientID(int client_ID, Connection connection) throws SQLException {
+    public Bank getBankByClientID(int client_ID, Connection connection) throws SQLException {
         String sql = "SELECT id, bankName, bankSwift, paymentNetwork, bankCode " +
                 "FROM bank WHERE client_ID = ?";
 
@@ -54,7 +54,7 @@ public class BankDAO{
         return null;
     }
 
-    public static Bank getBankByBankName(String bankName, Connection connection) throws SQLException {
+    public Bank getBankByBankName(String bankName, Connection connection) throws SQLException {
         String sql = "SELECT id, bankName, bankSwift, paymentNetwork, bankCode " +
                 "FROM bank WHERE bankName = ?";
 
@@ -77,7 +77,7 @@ public class BankDAO{
         return null;
     }
 
-    public static List<Bank> getAllBanks(Connection connection) throws SQLException {
+    public List<Bank> getAllBanks(Connection connection) throws SQLException {
         String sql = "SELECT id, bankName, bankSwift, paymentNetwork, bankCode FROM bank";
 
         List<Bank> banks = new ArrayList<>();

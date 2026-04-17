@@ -3,6 +3,7 @@ package service.impl;
 import dao.AuditTrailDAO;
 import exceptions.AuditTrailNotFoundException;
 import model.AuditTrail;
+import service.AuditTrailService;
 import utils.Utils;
 
 import java.sql.Connection;
@@ -11,7 +12,15 @@ import java.util.List;
 
 import static utils.Utils.readInputInteger;
 
-public class AuditTrailServiceImpl {
+public class AuditTrailServiceImpl  implements AuditTrailService {
+
+    private final AuditTrailDAO auditTrailDAO;
+
+    public AuditTrailServiceImpl(AuditTrailDAO auditTrailDAO){
+        this.auditTrailDAO = auditTrailDAO;
+    }
+
+    @Override
     public void auditTrailByClient(Connection connection) throws AuditTrailNotFoundException {
         boolean next = true;
 
@@ -21,7 +30,7 @@ public class AuditTrailServiceImpl {
 
             List<AuditTrail> auditTrailByClientID = null;
             try {
-                auditTrailByClientID = AuditTrailDAO.getAuditTrailByClientID(clientID, connection);
+                auditTrailByClientID = auditTrailDAO.getAuditTrailByClientID(clientID, connection);
             } catch (SQLException e) {
                 throw new AuditTrailNotFoundException("Audit trail not found for client.", e);
             }
@@ -37,10 +46,11 @@ public class AuditTrailServiceImpl {
         }
     }
 
+    @Override
     public void fullAuditTrail(Connection connection) throws AuditTrailNotFoundException {
         List<AuditTrail> allAuditTrail = null;
         try {
-            allAuditTrail = AuditTrailDAO.getAllAuditTrail(connection);
+            allAuditTrail = auditTrailDAO.getAllAuditTrail(connection);
         } catch (SQLException e) {
             throw new AuditTrailNotFoundException("Audit Trail not found.", e);
         }

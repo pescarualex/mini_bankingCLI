@@ -1,14 +1,12 @@
 package main;
 
-import dao.ClientDAO;
+import dao.*;
 import db.DatabaseConnection;
 import enums.Role;
 import exceptions.*;
 import model.Client;
-import service.impl.AccountServiceImpl;
-import service.impl.AuditTrailServiceImpl;
-import service.impl.BankServiceImpl;
-import service.impl.ClientServiceIImpl;
+import service.*;
+import service.impl.*;
 import utils.Utils;
 
 import java.sql.Connection;
@@ -18,14 +16,22 @@ import static utils.Utils.readInputInteger;
 
 public class Main {
 
-    static ClientServiceIImpl clientServiceI = new ClientServiceIImpl();
-    static AuditTrailServiceImpl auditTrailService = new AuditTrailServiceImpl();
-    static AccountServiceImpl accountService = new AccountServiceImpl();
-    static BankServiceImpl bankService = new BankServiceImpl();
+    static AuditTrailDAO auditTrailDAO = new AuditTrailDAO();
+    static AccountDAO accountDAO = new AccountDAO();
+    static ClientDAO clientDAO = new ClientDAO();
+    static CardDAO cardDAO = new CardDAO();
+    static IbanDAO ibanDAO = new IbanDAO();
+    static BankDAO bankDAO = new BankDAO();
+
+    static AuditTrailService auditTrailService = new AuditTrailServiceImpl(auditTrailDAO);
+    static AccountService accountService = new AccountServiceImpl(accountDAO, clientDAO, cardDAO, ibanDAO);
+    static BankService bankService = new BankServiceImpl(bankDAO);
+    static CardService cardService = new CardServiceImpl(cardDAO);
+    static IBANService ibanService = new IBANServiceImpl(ibanDAO);
+    static ClientService clientService = new ClientServiceIImpl(clientDAO, bankDAO, accountService, cardService, ibanService);
 
 
-    public static void main(String[] args) throws ConnectionNotFoundException, ClientNotFoundException,
-            AuditTrailNotSavedException, AccountNotFoundException,
+    public static void main(String[] args) throws ConnectionNotFoundException, ClientNotFoundException, AccountNotFoundException,
             BankNotCreatedException, ClientNotUpdatedException,
             AuditTrailNotFoundException {
 
@@ -42,7 +48,7 @@ public class Main {
                 case 1:
                     try {
                         try(Connection connection = DatabaseConnection.getConnection()){
-                            clientServiceI.register(connection);
+                            clientService.register(connection);
                         } catch (SQLException e){
                             throw new ConnectionNotFoundException("Connection failed", e);
                         }
@@ -73,13 +79,14 @@ public class Main {
         }
     }
 
-    private static void admin(Connection connection) throws ClientNotFoundException, AuditTrailNotFoundException, ClientNotUpdatedException, BankNotCreatedException, ConnectionNotFoundException {
+    private static void admin(Connection connection) throws ClientNotFoundException, AuditTrailNotFoundException,
+            ClientNotUpdatedException, BankNotCreatedException, ConnectionNotFoundException {
         System.out.println("To login, enter your username: ");
         String username = Utils.readInputString();
 
         Client clientByUsername = null;
         try {
-            clientByUsername = ClientDAO.getClientByUsername(username, connection);
+            clientByUsername = clientDAO.getClientByUsername(username, connection);
         } catch (SQLException e) {
             throw new ClientNotFoundException("Client not found by username.", e);
         }
@@ -101,7 +108,7 @@ public class Main {
                 switch (option) {
                     case 1:
                         try(Connection con = DatabaseConnection.getConnection()){
-                            clientServiceI.pendingClients(con);
+                            clientService.pendingClients(con);
                         } catch (SQLException e){
                             throw new ConnectionNotFoundException("Connection failed.", e);
                         }
@@ -129,7 +136,7 @@ public class Main {
                         break;
                     case 5:
                         try(Connection con = DatabaseConnection.getConnection()){
-                            clientServiceI.createAnotherAdmin(con);
+                            clientService.createAnotherAdmin(con);
                         } catch (SQLException e){
                             throw new ConnectionNotFoundException("Connection failed.", e);
                         }
@@ -145,7 +152,8 @@ public class Main {
         }
     }
 
-    private static void login(Connection connection) throws ConnectionNotFoundException, ClientNotFoundException, AuditTrailNotSavedException, AccountNotFoundException {
+    private static void login(Connection connection) throws ConnectionNotFoundException, ClientNotFoundException,
+            AccountNotFoundException {
         System.out.println("Enter your username:");
         String username = Utils.readInputString();
         System.out.println("Enter password:");
@@ -154,7 +162,7 @@ public class Main {
         Client clientByUsername = null;
 
         try {
-            clientByUsername = ClientDAO.getClientByUsername(username, connection);
+            clientByUsername = clientDAO.getClientByUsername(username, connection);
         } catch (SQLException e) {
             throw new ClientNotFoundException("Client not found.", e);
         }

@@ -1,6 +1,7 @@
 package service.impl;
 
 
+import dao.BankDAO;
 import dao.IbanDAO;
 import exceptions.AuditTrailNotSavedException;
 import exceptions.CounterExceededException;
@@ -8,6 +9,7 @@ import exceptions.IBANNotSavedException;
 import model.Account;
 import model.Bank;
 import model.IBAN;
+import service.IBANService;
 import utils.Utils;
 
 import java.math.BigInteger;
@@ -18,18 +20,25 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class IBANServiceImpl {
+public class IBANServiceImpl implements IBANService {
     private static final Set<String> UNIQUE_IBANs = new HashSet<>();
-    private final BankServiceImpl bankService = new BankServiceImpl();
+    private final BankServiceImpl bankService = new BankServiceImpl(new BankDAO());
     private static Map<String, Integer> MAP_VALUES;
 
-    public static IBAN createIban(String countryCode, Bank bank, Account account, Connection connection) throws CounterExceededException, IBANNotSavedException, AuditTrailNotSavedException {
+    private IbanDAO ibanDAO;
+
+    public IBANServiceImpl(IbanDAO ibanDAO){
+        this.ibanDAO = ibanDAO;
+    }
+
+    @Override
+    public IBAN createIban(String countryCode, Bank bank, Account account, Connection connection) throws CounterExceededException, IBANNotSavedException, AuditTrailNotSavedException {
         IBAN iban = new IBAN();
-        iban.setIBAN(IBANServiceImpl.generateIBAN(countryCode, bank));
+        iban.setIBAN(generateIBAN(countryCode, bank));
         iban.setAccountId(account.getId());
 
         try {
-            IbanDAO.saveIBAN(iban, connection);
+            ibanDAO.saveIBAN(iban, connection);
         } catch (SQLException e) {
             throw new IBANNotSavedException("Iban not saved", e);
         }
@@ -44,8 +53,8 @@ public class IBANServiceImpl {
         return iban;
     }
 
-
-    public static String generateIBAN(String countryCode, Bank bank) throws CounterExceededException {
+    @Override
+    public String generateIBAN(String countryCode, Bank bank) throws CounterExceededException {
         MAP_VALUES = getStringIntegerMap();
         int counter = 0;
         int uniqueCounter = 0;
@@ -117,7 +126,8 @@ public class IBANServiceImpl {
     }
 
 
-    public static int checkValidityOfIBAN(StringBuilder ibanToCheck) {
+    @Override
+    public int checkValidityOfIBAN(StringBuilder ibanToCheck) {
         /// Final check if entire iban after checksum is generated % 97 == 1 to ensure validity
         StringBuilder stringBuilder = new StringBuilder();
         for (char ch : ibanToCheck.toString().toCharArray()) {
@@ -131,7 +141,8 @@ public class IBANServiceImpl {
     }
 
     // convert letters to number. Each letter correspond to a number from MAP_VALUES
-    private static StringBuilder convertLetterToNumber(Map<String, Integer> MAP_VALUES, StringBuilder ibanOnlyNumbers, char ch) {
+    @Override
+    public StringBuilder convertLetterToNumber(Map<String, Integer> MAP_VALUES, StringBuilder ibanOnlyNumbers, char ch) {
         String charToString = String.valueOf(ch);
         String upperCase = charToString.toUpperCase();
         Integer i;
@@ -145,7 +156,8 @@ public class IBANServiceImpl {
     }
 
     // map each letter to corresponded number
-    private static Map<String, Integer> getStringIntegerMap() {
+    @Override
+    public Map<String, Integer> getStringIntegerMap() {
         final Map<String, Integer> MAP_VALUES = new HashMap<>();
         MAP_VALUES.put("A", 10);
         MAP_VALUES.put("B", 11);

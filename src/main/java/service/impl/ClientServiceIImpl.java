@@ -8,6 +8,10 @@ import exceptions.*;
 import model.Account;
 import model.Bank;
 import model.Client;
+import service.AccountService;
+import service.CardService;
+import service.ClientService;
+import service.IBANService;
 import utils.Utils;
 
 import java.sql.Connection;
@@ -16,9 +20,25 @@ import java.util.List;
 
 import static utils.Utils.readInputInteger;
 
-public class ClientServiceIImpl {
+public class ClientServiceIImpl implements ClientService {
 
-    public static Client createClient(int bankID, Connection connection) throws SQLException {
+    private final ClientDAO clientDAO;
+    private final BankDAO bankDAO;
+    private final AccountService accountService;
+    private final CardService cardService;
+    private final IBANService ibanService;
+
+    public ClientServiceIImpl(ClientDAO clientDAO, BankDAO bankDAO,
+                              AccountService accountService, CardService cardService, IBANService ibanService){
+        this.clientDAO = clientDAO;
+        this.bankDAO = bankDAO;
+        this.accountService = accountService;
+        this.cardService = cardService;
+        this.ibanService = ibanService;
+    }
+
+    @Override
+    public Client createClient(int bankID, Connection connection) throws ClientNotSavedException {
         Client client = new Client();
 
         System.out.println("Enter first name: ");
@@ -43,7 +63,12 @@ public class ClientServiceIImpl {
         client.setRole(Role.CLIENT);
         client.setStatus(Status.PENDING);
 
-        int clientIDFromDB = ClientDAO.saveClient(client, connection);
+        int clientIDFromDB = 0;
+        try {
+            clientIDFromDB = clientDAO.saveClient(client, connection);
+        } catch (SQLException e) {
+            throw new ClientNotSavedException("Client not saved.", e);
+        }
 
         try {
             Utils.logEntry("First Name: " + client.getFirstName() +
@@ -55,15 +80,16 @@ public class ClientServiceIImpl {
         return client;
     }
 
+    @Override
     public void register(Connection connection) throws CounterExceededException, BankNotFoundException {
         List<Bank> banks = null;
         try {
-            banks = BankDAO.getAllBanks(connection);
+            banks = bankDAO.getAllBanks(connection);
         } catch (SQLException e) {
             throw new BankNotFoundException("bank not found.", e);
         }
 
-        System.out.println("Choose a bank: ");
+        System.out.println("Choose a bank: (type the name)");
         for(int i = 0; i < banks.size(); i++){
             System.out.println((i+1) + ". " + banks.get(i).getBankName());
         }
@@ -79,13 +105,17 @@ public class ClientServiceIImpl {
         }
 
         try {
-            Bank bank = BankDAO.getBankByBankName(option, connection);
-            client = ClientServiceIImpl.createClient(bank.getID(), connection);
-            account = AccountServiceImpl.createAccount(client, connection);
-            CardServiceImpl.createCard(bank, account, connection);
-            IBANServiceImpl.createIban("RO", bank, account, connection);
+            Bank bank = bankDAO.getBankByBankName(option, connection);
+            if(bank == null){
+                System.out.println("Bank not found.");
+            } else {
+                client = createClient(bank.getID(), connection);
+                account = accountService.createAccount(client, connection);
+                cardService.createCard(bank, account, connection);
+                ibanService.createIban("RO", bank, account, connection);
 
-            connection.commit();
+                connection.commit();
+            }
         } catch (SQLException | IBANNotSavedException | AuditTrailNotSavedException e){
             try {
                 if (connection != null) {
@@ -95,6 +125,12 @@ public class ClientServiceIImpl {
                 ex.printStackTrace();
             }
             throw new RuntimeException("Transaction failed", e);
+        } catch (AccountNotSavedException e) {
+            throw new RuntimeException(e);
+        } catch (ClientNotSavedException e) {
+            throw new RuntimeException(e);
+        } catch (CardNotSavedException e) {
+            throw new RuntimeException(e);
         } finally {
             try {
                 if (connection != null) {
@@ -106,13 +142,14 @@ public class ClientServiceIImpl {
         }
     }
 
+    @Override
     public void pendingClients(Connection connection) {
         boolean continueApproving = true;
         while(continueApproving) {
             System.out.println("Here are all pending clients that needs approval:");
             List<Client> clientsWhereStatusPending = null;
             try {
-                clientsWhereStatusPending = ClientDAO.getClientsWhereStatusPending(connection);
+                clientsWhereStatusPending = clientDAO.getClientsWhereStatusPending(connection);
             } catch (SQLException e){
                 System.out.println("Error getting the clients with status Pending.");
             }
@@ -127,7 +164,7 @@ public class ClientServiceIImpl {
                 System.out.println("To approve a client, enter the client ID:");
                 int clientID = readInputInteger();
                 try {
-                    ClientDAO.updateClientStatus(clientID, Status.APPROVED, connection);
+                    clientDAO.updateClientStatus(clientID, Status.APPROVED, connection);
                 } catch (SQLException e) {
                     System.out.println("Updating the status of the client failed.");
                 }
@@ -141,17 +178,18 @@ public class ClientServiceIImpl {
         }
     }
 
-    public void createAnotherAdmin(Connection connection) throws ClientNotFoundException, ClientNotUpdatedException {
+    @Override
+    public void createAnotherAdmin(Connection connection) throws ClientNotUpdatedException {
         Client client = null;
         try {
-            client = ClientServiceIImpl.createClient(0, connection);
-        } catch (SQLException e) {
-            throw new ClientNotFoundException("Client not found.", e);
+            client = createClient(0, connection);
+        } catch (ClientNotSavedException e) {
+            throw new RuntimeException(e);
         }
 
         try {
-            ClientDAO.updateClientRole(client.getId(), Role.ADMIN, connection);
-            ClientDAO.updateClientStatus(client.getId(), Status.APPROVED, connection);
+            clientDAO.updateClientRole(client.getId(), Role.ADMIN, connection);
+            clientDAO.updateClientStatus(client.getId(), Status.APPROVED, connection);
             System.out.println("Admin created successfully!");
         } catch (SQLException e){
             throw new ClientNotUpdatedException("Client role and status not updated", e);

@@ -8,6 +8,7 @@ import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
@@ -17,6 +18,8 @@ public class Utils {
     private static final Set<String> numbersGenerated = new HashSet<>();
     //private static List<String> logs = new ArrayList<>();
     private static Scanner scanner = new Scanner(System.in);
+
+    static AuditTrailDAO auditTrailDAO = new AuditTrailDAO();
 
     public static String generateNumbers(int length) {
         String generatedString = "";
@@ -42,11 +45,11 @@ public class Utils {
     public static AuditTrail logEntry(String message, int clientID, Connection connection) throws AuditTrailNotSavedException {
         AuditTrail auditTrail = new AuditTrail();
         auditTrail.setEntry(message);
-        auditTrail.setTimestamp(LocalDate.now());
+        auditTrail.setTimestamp(LocalDateTime.now());
         auditTrail.setClientId(clientID);
 
         try {
-            AuditTrailDAO.saveAuditTrail(auditTrail, connection);
+            auditTrailDAO.saveAuditTrail(auditTrail, connection);
         } catch (SQLException e) {
             throw new AuditTrailNotSavedException("Audit Trail not saved.", e);
         }
@@ -56,23 +59,11 @@ public class Utils {
     public static AuditTrail logEntry(String message, Connection connection) throws SQLException {
         AuditTrail auditTrail = new AuditTrail();
         auditTrail.setEntry(message);
-        auditTrail.setTimestamp(LocalDate.now());
+        auditTrail.setTimestamp(LocalDateTime.now());
 
-        AuditTrailDAO.saveAuditTrail(auditTrail, connection);
+        auditTrailDAO.saveAuditTrail(auditTrail, connection);
         return auditTrail;
     }
-
-//    public static void getLogs() {
-//        int counter = 0;
-//        if (!logs.isEmpty()) {
-//            for (String log : logs) {
-//                System.out.println(counter + "System -> " + log);
-//                counter++;
-//            }
-//        } else {
-//            System.out.println("System -> No logs");
-//        }
-//    }
 
     public static String readInputString(){
         return scanner.nextLine();

@@ -6,7 +6,7 @@ import java.sql.*;
 import java.time.LocalDate;
 
 public class CardDAO {
-    public static int saveCard(Card card, Connection connection) throws SQLException {
+    public int saveCard(Card card, Connection connection) throws SQLException {
         String sql = "INSERT INTO card " +
                 "(cardNumber, pinCode, expirationDate, CVV, accountId) " +
                 "VALUES (?,?,?,?,?)";
@@ -31,9 +31,9 @@ public class CardDAO {
     }
 
 
-    public static Card getCardByAccountID(int accountID, Connection connection) throws SQLException {
+    public Card getCardByAccountID(int accountID, Connection connection) throws SQLException {
         String sql = "SELECT id, cardNumber, pinCode, expirationDate, CVV, accountId" +
-                " FROM card WHERE account_ID = ?";
+                " FROM card WHERE accountId = ?";
 
         try( PreparedStatement stmt = connection.prepareStatement(sql)){
             stmt.setInt(1, accountID);

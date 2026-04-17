@@ -4,11 +4,12 @@ import model.AuditTrail;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AuditTrailDAO {
-    public static int saveAuditTrail(AuditTrail auditTrail, Connection connection) throws SQLException {
+    public int saveAuditTrail(AuditTrail auditTrail, Connection connection) throws SQLException {
         String sql = "INSERT INTO audittrail " +
                 "(entry, timestamp, clientId) " +
                 "VALUES (?,?,?)";
@@ -31,8 +32,8 @@ public class AuditTrailDAO {
     }
 
 
-    public static List<AuditTrail> getAuditTrailByClientID(int clientID, Connection connection) throws SQLException {
-        String sql = "SELECT id, entry, timestamp, clientID FROM audittrail WHERE clientID = ?";
+    public List<AuditTrail> getAuditTrailByClientID(int clientID, Connection connection) throws SQLException {
+        String sql = "SELECT id, entry, timestamp, clientId FROM audittrail WHERE clientId = ?";
 
         List<AuditTrail> auditTrailEntries = new ArrayList<>();
 
@@ -44,7 +45,7 @@ public class AuditTrailDAO {
                 AuditTrail auditTrail = new AuditTrail();
                 auditTrail.setId(resultSet.getInt("id"));
                 auditTrail.setEntry(resultSet.getString("entry"));
-                auditTrail.setTimestamp(LocalDate.parse(resultSet.getString("timestamp")));
+                auditTrail.setTimestamp(LocalDateTime.parse(resultSet.getString("timestamp")));
                 auditTrail.setClientId(resultSet.getInt("clientId"));
                 auditTrailEntries.add(auditTrail);
             }
@@ -52,8 +53,8 @@ public class AuditTrailDAO {
         return auditTrailEntries;
     }
 
-    public static List<AuditTrail> getAllAuditTrail(Connection connection) throws SQLException {
-        String sql = "SELECT id, entry, timestamp, clientID FROM audittrail";
+    public List<AuditTrail> getAllAuditTrail(Connection connection) throws SQLException {
+        String sql = "SELECT id, entry, timestamp, clientId FROM audittrail";
 
         List<AuditTrail> auditTrailEntries = new ArrayList<>();
 
@@ -64,7 +65,7 @@ public class AuditTrailDAO {
                 AuditTrail auditTrail = new AuditTrail();
                 auditTrail.setId(resultSet.getInt("id"));
                 auditTrail.setEntry(resultSet.getString("entry"));
-                auditTrail.setTimestamp(LocalDate.parse(resultSet.getString("timestamp")));
+                auditTrail.setTimestamp(LocalDateTime.parse(resultSet.getString("timestamp")));
                 auditTrail.setClientId(resultSet.getInt("clientId"));
                 auditTrailEntries.add(auditTrail);
             }

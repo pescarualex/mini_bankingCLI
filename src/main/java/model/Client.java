@@ -104,7 +104,6 @@ public class Client {
                 ", CNP='" + CNP + '\'' +
                 ", seriesAndNumberOfCI='" + seriesAndNumberOfCI + '\'' +
                 ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
                 ". role=" + role.name() + '\'' +
                 ", status=" + status.name() + '\'' +
                 ", bankID=" + bankID + '\'' +

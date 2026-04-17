@@ -1,3 +1,4 @@
+import dao.IbanDAO;
 import exceptions.CounterExceededException;
 import model.Bank;
 import org.junit.jupiter.api.BeforeAll;
@@ -25,8 +26,7 @@ public class IBANServiceImplTests {
          BT.setBankCode("BTRL");
          BT.setPaymentNetwork("Mastercard");
          BT.setBankSwift("BTRO");
-         BT.setClientID(17);
-         BT.setAccountID(2);
+
 
          BCR = new Bank();
          BCR.setID(1);
@@ -34,13 +34,12 @@ public class IBANServiceImplTests {
          BCR.setBankCode("BCRO");
          BCR.setPaymentNetwork("Mastercard");
          BCR.setBankSwift("BCR20");
-         BCR.setClientID(17);
-         BCR.setAccountID(2);
+
      }
 
     @Test
     void verifyLengthOfIBANIs28Characters() throws CounterExceededException {
-        IBANServiceImpl ibanServiceImpl = new IBANServiceImpl();
+        IBANServiceImpl ibanServiceImpl = new IBANServiceImpl(new IbanDAO());
 
         String iban = ibanServiceImpl.generateIBAN("RO", BT);
         assertEquals(28, iban.length());
@@ -49,7 +48,7 @@ public class IBANServiceImplTests {
 
     @Test
     void checkIfIBANHasTheCorrectStructure() throws CounterExceededException {
-        IBANServiceImpl ibanServiceImpl = new IBANServiceImpl();
+        IBANServiceImpl ibanServiceImpl = new IBANServiceImpl(new IbanDAO());
 
         String iban = ibanServiceImpl.generateIBAN("RO", BT);
         Pattern pattern = Pattern.compile("^[A-Z]{2}[0-9]{2}[A-Z0-9]{11,30}$");
@@ -60,7 +59,7 @@ public class IBANServiceImplTests {
 
     @Test
     void verifyIBANGeneratedIsValid() throws CounterExceededException {
-        IBANServiceImpl ibanServiceImpl = new IBANServiceImpl();
+        IBANServiceImpl ibanServiceImpl = new IBANServiceImpl(new IbanDAO());
 
         String iban = ibanServiceImpl.generateIBAN("RO", BT);
         String[] results = iban.split("(?<=\\G.{" + 4 + "})");
@@ -79,7 +78,7 @@ public class IBANServiceImplTests {
 
     @Test
     void CheckIfTwoIBANsAreNotEqualsFromTheSameBank() throws CounterExceededException {
-        IBANServiceImpl ibanServiceImpl = new IBANServiceImpl();
+        IBANServiceImpl ibanServiceImpl = new IBANServiceImpl(new IbanDAO());
 
         String iban1 = ibanServiceImpl.generateIBAN("RO", BT);
         String iban2 = ibanServiceImpl.generateIBAN("RO", BT);

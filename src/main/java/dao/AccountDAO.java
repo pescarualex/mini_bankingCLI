@@ -5,7 +5,7 @@ import model.Account;
 import java.sql.*;
 
 public class AccountDAO {
-    public static int saveAccount(Account account, Connection connection) throws SQLException {
+    public int saveAccount(Account account, Connection connection) throws SQLException {
         String sql = "INSERT INTO account " +
                 "(clientId, amountOfMoney) " +
                 "VALUES (?,?)";
@@ -28,7 +28,7 @@ public class AccountDAO {
     }
 
 
-    public static Account getAccountByClientID(int clientID, Connection connection) throws SQLException {
+    public Account getAccountByClientID(int clientID, Connection connection) throws SQLException {
         String sql = "SELECT id, clientId, amountOfMoney FROM account WHERE clientId = ?";
 
         try( PreparedStatement stmt = connection.prepareStatement(sql)){
@@ -48,7 +48,7 @@ public class AccountDAO {
         return null;
     }
 
-    public static void updateAmmountOfMoney(int clientId, long ammountOfMoney, Connection connection) throws SQLException{
+    public void updateAmmountOfMoney(int clientId, long ammountOfMoney, Connection connection) throws SQLException{
         String sql = "UPDATE account SET amountOfMoney = ? WHERE clientId = ?";
 
         try ( PreparedStatement stmt = connection.prepareStatement(sql)) {
