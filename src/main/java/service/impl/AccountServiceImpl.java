@@ -49,7 +49,7 @@ public class AccountServiceImpl implements AccountService {
         }
 
         try {
-            Utils.logEntry("Account created for: " + client.getId(), client.getId(), connection);
+            Utils.logEntry("Created account with id: " + account.getId() + " for: " + client.getId(), client.getId(), connection);
         } catch (AuditTrailNotSavedException e) {
             System.out.println("Audit trail entry not saved.");
         }
@@ -163,16 +163,16 @@ public class AccountServiceImpl implements AccountService {
                                     accountDAO.updateAmountOfMoney(client.getId(), currentUserAmountMoney, connection);
                                     System.out.println("Transfer completed successfully!");
 
-                                    Utils.logEntry("Transferred money to " + clientByID.getId() + ", " +
+                                    Utils.logEntry("User with id: " + client.getId() + " transferred money to " + clientByID.getId() + ", " +
                                             clientByID.getUsername(), client.getId(), connection);
                                 }
                             } else {
-                                System.out.println("No IBAN was found.");
+                                System.out.println("IBAN not found.");
                             }
                         }
                     }
                 } else {
-                    System.out.println("No client was found.");
+                    System.out.println("Client not found.");
                 }
                 connection.commit();
             } catch (SQLException e) {
@@ -241,9 +241,9 @@ public class AccountServiceImpl implements AccountService {
             System.out.println("Withdraw successfully!");
 
             try {
-                Utils.logEntry("Withdraw ammount of money: " + money, client.getId(), connection);
+                Utils.logEntry("Withdraw amount of money: " + money, client.getId(), connection);
             } catch (AuditTrailNotSavedException e) {
-                System.out.println("The AT entry is not saved.");
+                System.out.println("Audit Trail not saved.");
             }
 
             connection.commit();
@@ -293,7 +293,7 @@ public class AccountServiceImpl implements AccountService {
             try {
                 Utils.logEntry("Deposit amount of money: " + deposit, client.getId(), connection);
             } catch (AuditTrailNotSavedException e) {
-                System.out.println("The AT entry is not saved.");
+                System.out.println("Audit Trail not saved.");
             }
 
             connection.commit();

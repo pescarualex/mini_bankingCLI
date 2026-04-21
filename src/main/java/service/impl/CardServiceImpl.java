@@ -38,7 +38,7 @@ public class CardServiceImpl implements CardService {
 
         try {
             Utils.logEntry("Created card for account: " + account.getId() +
-                    " at bank: " + bank.getBankName(), account.getClientId(), connection);
+                    " at bank: " + bank.getBankName() + ", for client id: " + account.getClientId(), account.getClientId(), connection);
         } catch (AuditTrailNotSavedException e) {
             System.out.println("Audit trail entry not saved for card creation.");
         }

@@ -32,7 +32,7 @@ public class AuditTrailServiceImpl  implements AuditTrailService {
             try {
                 auditTrailByClientID = auditTrailDAO.getAuditTrailByClientID(clientID, connection);
             } catch (SQLException e) {
-                throw new AuditTrailNotFoundException("Audit trail not found for client.", e);
+                throw new AuditTrailNotFoundException("Audit trail not.", e);
             }
             for (AuditTrail entry : auditTrailByClientID) {
                 System.out.println(entry);

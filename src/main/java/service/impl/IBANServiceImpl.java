@@ -42,7 +42,7 @@ public class IBANServiceImpl implements IBANService {
             Utils.logEntry("Created IBAN for account: " + account.getId() +
                     " at bank: " + bank.getBankName(), account.getClientId(), connection);
         } catch (AuditTrailNotSavedException e) {
-            System.out.println("Audit trail entry not saved for IBAN creation.");
+            System.out.println("Audit trail not saved.");
         }
 
         return iban;

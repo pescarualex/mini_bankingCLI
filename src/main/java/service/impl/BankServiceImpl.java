@@ -38,7 +38,7 @@ public class BankServiceImpl implements BankService {
 
         System.out.println("Bank created successfully!");
 
-        Utils.logEntry("Bank: " + bank.getBankName() + " was created, and bank ID: " + bank.getID(), connection);
+        Utils.logEntry("Created bank: " + bank.getBankName() + " with id: " + bank.getID(), connection);
 
         return bank;
     }

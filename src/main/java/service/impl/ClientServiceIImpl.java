@@ -74,8 +74,8 @@ public class ClientServiceIImpl implements ClientService {
         }
 
         try {
-            Utils.logEntry("First Name: " + client.getFirstName() +
-                    ", Last Name: " + client.getLastName(), clientIDFromDB, connection);
+            Utils.logEntry("Created client with first name: " + client.getFirstName() +
+                    ", last name: " + client.getLastName() + ", username: " + client.getUsername(), clientIDFromDB, connection);
         } catch (AuditTrailNotSavedException e) {
             System.out.println("Audit trail entry not saved for client creation.");
         }
@@ -89,12 +89,12 @@ public class ClientServiceIImpl implements ClientService {
         try {
             banks = bankDAO.getAllBanks(connection);
         } catch (SQLException e) {
-            throw new BankNotFoundException("bank not found.", e);
+            throw new BankNotFoundException("Bank not found.", e);
         }
 
         System.out.println("Choose a bank: (type the name)");
-        for(int i = 0; i < banks.size(); i++){
-            System.out.println((i+1) + ". " + banks.get(i).getBankName());
+        for (Bank value : banks) {
+            System.out.println("- " + value.getBankName());
         }
         String option = Utils.readInputString();
 
@@ -146,7 +146,7 @@ public class ClientServiceIImpl implements ClientService {
     }
 
     @Override
-    public void pendingClients(Connection connection) {
+    public void pendingClients(Connection connection) throws AuditTrailNotSavedException {
         boolean continueApproving = true;
         while(continueApproving) {
             System.out.println("Here are all pending clients that needs approval:");
@@ -168,15 +168,17 @@ public class ClientServiceIImpl implements ClientService {
                 int clientID = readInputInteger();
                 try {
                     clientDAO.updateClientStatus(clientID, Status.APPROVED, connection);
+                    Utils.logEntry("Updated client status to `APPROVED` for client id: " + clientID, connection);
+                    System.out.println("Client approved successfully!\n" +
+                            "Do you want to continue?");
+                    String s = Utils.readInputString();
+                    if (s.equalsIgnoreCase("no")) {
+                        continueApproving = false;
+                    }
                 } catch (SQLException e) {
-                    System.out.println("Updating the status of the client failed.");
+                    System.out.println("Client status update failed.");
                 }
-                System.out.println("Client approved successfully!\n" +
-                        "Do you want to continue?");
-                String s = Utils.readInputString();
-                if (s.equalsIgnoreCase("no")) {
-                    continueApproving = false;
-                }
+
             }
         }
     }

@@ -53,8 +53,8 @@ public class AdminServiceImpl implements AdminService {
         System.out.println("Admin created successfully!");
 
         try {
-            Utils.logEntry("First Name: " + admin.getFirstName() +
-                    ", Last Name: " + admin.getLastName(), adminID, connection);
+            Utils.logEntry("Created Admin user with first name: " + admin.getFirstName() +
+                    ", last name: " + admin.getLastName() + ", username: " + admin.getUsername(), adminID, connection);
         } catch (AuditTrailNotSavedException e) {
             System.out.println("Audit trail entry not saved for admin creation.");
         }
