@@ -125,7 +125,7 @@ public class Main {
                     case 1:
                         try(Connection con = DatabaseConnection.getConnection()){
                             clientService.pendingClients(con);
-                        } catch (SQLException e){
+                        } catch (SQLException | AuditTrailNotSavedException e){
                             throw new ConnectionNotFoundException("Connection failed.", e);
                         }
                         break;

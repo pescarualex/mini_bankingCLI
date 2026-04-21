@@ -53,6 +53,7 @@ public class IBANServiceImpl implements IBANService {
         MAP_VALUES = getStringIntegerMap();
         int counter = 0;
         int uniqueCounter = 0;
+        String finalIban = null;
         while (counter < 5) {
             String checksum = "00";
             String bankCode = bank.getBankCode();
@@ -100,8 +101,6 @@ public class IBANServiceImpl implements IBANService {
             ibanToCheck.append(check);
 
             int i = checkValidityOfIBAN(ibanToCheck);
-
-            String finalIban = null;
 
             if (i == 1) {
                 finalIban = countryCode + check + bankCode + bankIdentificationCode + uniqueNrOfAccount;

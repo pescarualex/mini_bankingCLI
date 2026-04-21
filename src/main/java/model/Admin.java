@@ -71,7 +71,7 @@ public class Admin {
 
         @Override
         public String toString() {
-            return "Client{" +
+            return "Admin{" +
                     "id=" + id +
                     ", firstName='" + firstName + '\'' +
                     ", lastName='" + lastName + '\'' +
