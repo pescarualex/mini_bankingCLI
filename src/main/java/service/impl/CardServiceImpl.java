@@ -12,8 +12,6 @@ import utils.Utils;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 public class CardServiceImpl implements CardService {
 
@@ -22,8 +20,6 @@ public class CardServiceImpl implements CardService {
     public CardServiceImpl(CardDAO cardDAO){
         this.cardDAO = cardDAO;
     }
-
-    private static final Set<String> UNIQUE_CARD_NUMBERS = new HashSet<>();
 
     @Override
     public Card createCard(Bank bank, Account account, Connection connection) throws CardNotSavedException {
@@ -106,14 +102,8 @@ public class CardServiceImpl implements CardService {
             checkDigit = 10 - (sumOfCharactersFromCardNumber % 10);
         }
 
-        initialCardNumber.append(checkDigit);
-
-        //check the uniqueness of card number from set list
-        if(UNIQUE_CARD_NUMBERS.add(initialCardNumber.toString())){
-            return initialCardNumber.toString();
-        } else {
-            throw new IllegalArgumentException("Invalid card number");
-        }
+        StringBuilder append = initialCardNumber.append(checkDigit);
+        return append.toString();
     }
 
     @Override

@@ -14,6 +14,7 @@ import model.Card;
 import model.Client;
 import model.IBAN;
 import service.AccountService;
+import utils.PasswordUtils;
 import utils.Utils;
 
 import java.sql.Connection;
@@ -67,7 +68,7 @@ public class AccountServiceImpl implements AccountService {
             if(clientByID == null){
                 System.out.println("Client not found.");
             } else {
-                if (clientByID.getPassword().equals(password)) {
+                if (PasswordUtils.verifyPassword(password, clientByID.getPassword())) {
                     System.out.println("Client Information:");
                     System.out.println("First name: " + clientByID.getFirstName() + ", Last name: " + clientByID.getLastName() + "\n" +
                             "CNP: " + clientByID.getCNP() + ", Series and CI Number: " + clientByID.getSeriesAndNumberOfCI() + "\n" +

@@ -15,15 +15,12 @@ import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public class IBANServiceImpl implements IBANService {
-    private static final Set<String> UNIQUE_IBANs = new HashSet<>();
     private static Map<String, Integer> MAP_VALUES;
 
-    private IbanDAO ibanDAO;
+    private final IbanDAO ibanDAO;
 
     public IBANServiceImpl(IbanDAO ibanDAO){
         this.ibanDAO = ibanDAO;
@@ -104,16 +101,14 @@ public class IBANServiceImpl implements IBANService {
 
             int i = checkValidityOfIBAN(ibanToCheck);
 
+            String finalIban = null;
+
             if (i == 1) {
-                String finalIban = countryCode + check + bankCode + bankIdentificationCode + uniqueNrOfAccount;
-                if (UNIQUE_IBANs.add(finalIban)) {
-                    return finalIban;
-                } else {
-                    uniqueCounter++;
-                }
+                finalIban = countryCode + check + bankCode + bankIdentificationCode + uniqueNrOfAccount;
             } else {
                 counter++;
             }
+            return finalIban;
         }
 
         if(counter == 5) {
