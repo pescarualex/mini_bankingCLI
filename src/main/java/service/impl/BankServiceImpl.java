@@ -38,11 +38,7 @@ public class BankServiceImpl implements BankService {
 
         System.out.println("Bank created successfully!");
 
-        try {
-            Utils.logEntry("Bank: " + bank.getBankName() + " was created, and bank ID: " + bank.getID(), connection);
-        } catch (SQLException e) {
-            throw new AuditTrailNotSavedException("Audit Trail not saved.", e);
-        }
+        Utils.logEntry("Bank: " + bank.getBankName() + " was created, and bank ID: " + bank.getID(), connection);
 
         return bank;
     }

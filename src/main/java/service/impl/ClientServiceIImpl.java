@@ -12,6 +12,7 @@ import service.AccountService;
 import service.CardService;
 import service.ClientService;
 import service.IBANService;
+import utils.PasswordUtils;
 import utils.Utils;
 
 import java.sql.Connection;
@@ -57,7 +58,9 @@ public class ClientServiceIImpl implements ClientService {
         client.setUsername(Utils.readInputString());
 
         System.out.println("Set a password:");
-        client.setPassword(Utils.readInputString());
+        String rawPassword = Utils.readInputString();
+        String hashedPassword = PasswordUtils.hash(rawPassword);
+        client.setPassword(hashedPassword);
 
         client.setBankID(bankID);
         client.setRole(Role.CLIENT);

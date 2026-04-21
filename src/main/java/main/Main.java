@@ -8,6 +8,7 @@ import model.Admin;
 import model.Client;
 import service.*;
 import service.impl.*;
+import utils.PasswordUtils;
 import utils.Utils;
 
 import java.sql.Connection;
@@ -186,7 +187,7 @@ public class Main {
         }
 
         if(clientByUsername.getUsername().equals(username) &&
-                clientByUsername.getPassword().equals(password)){
+                PasswordUtils.verifyPassword(password, clientByUsername.getPassword())){
             while(true) {
                 System.out.println("Welcome, " + clientByUsername.getUsername());
                 System.out.println("1. Deposit money\n" +

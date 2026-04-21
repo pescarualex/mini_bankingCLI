@@ -56,12 +56,16 @@ public class Utils {
         return auditTrail;
     }
 
-    public static AuditTrail logEntry(String message, Connection connection) throws SQLException {
+    public static AuditTrail logEntry(String message, Connection connection) throws AuditTrailNotSavedException {
         AuditTrail auditTrail = new AuditTrail();
         auditTrail.setEntry(message);
         auditTrail.setTimestamp(LocalDateTime.now());
 
-        auditTrailDAO.saveAuditTrail(auditTrail, connection);
+        try {
+            auditTrailDAO.saveAuditTrail(auditTrail, connection);
+        } catch (SQLException e) {
+            throw new AuditTrailNotSavedException("Audit Trail not saved.", e);
+        }
         return auditTrail;
     }
 
