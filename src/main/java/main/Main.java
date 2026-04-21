@@ -31,9 +31,8 @@ public class Main {
     static ClientService clientService = new ClientServiceIImpl(clientDAO, bankDAO, accountService, cardService, ibanService);
 
 
-    public static void main(String[] args) throws ConnectionNotFoundException, ClientNotFoundException, AccountNotFoundException,
-            BankNotCreatedException, ClientNotUpdatedException,
-            AuditTrailNotFoundException {
+    public static void main(String[] args) throws ConnectionNotFoundException, ClientNotFoundException,
+            AccountNotFoundException, ClientNotUpdatedException, AuditTrailNotFoundException {
 
         while(true){
             System.out.println("Welcome!\n" +
@@ -80,7 +79,7 @@ public class Main {
     }
 
     private static void admin(Connection connection) throws ClientNotFoundException, AuditTrailNotFoundException,
-            ClientNotUpdatedException, BankNotCreatedException, ConnectionNotFoundException {
+            ClientNotUpdatedException, ConnectionNotFoundException {
         System.out.println("To login, enter your username: ");
         String username = Utils.readInputString();
 
@@ -91,9 +90,8 @@ public class Main {
             throw new ClientNotFoundException("Client not found by username.", e);
         }
 
-        if (clientByUsername.getUsername() == null) {
-            System.out.println("No user found with this username");
-            return;
+        if (clientByUsername == null) {
+            System.out.println("No user found.");
         } else if (clientByUsername.getRole() == Role.ADMIN) {
             while (true) {
                 System.out.println("Welcome " + clientByUsername.getUsername() + "\n" +
@@ -167,8 +165,8 @@ public class Main {
             throw new ClientNotFoundException("Client not found.", e);
         }
 
-        if(clientByUsername.getUsername() == null){
-            System.out.println("No user found with this username");
+        if(clientByUsername == null){
+            System.out.println("No user found.");
             return;
         }
 

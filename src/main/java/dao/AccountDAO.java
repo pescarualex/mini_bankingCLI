@@ -48,12 +48,12 @@ public class AccountDAO {
         return null;
     }
 
-    public void updateAmmountOfMoney(int clientId, long ammountOfMoney, Connection connection) throws SQLException{
+    public void updateAmountOfMoney(int clientId, long amountOfMoney, Connection connection) throws SQLException{
         String sql = "UPDATE account SET amountOfMoney = ? WHERE clientId = ?";
 
         try ( PreparedStatement stmt = connection.prepareStatement(sql)) {
 
-            stmt.setLong(1, ammountOfMoney);   //
+            stmt.setLong(1, amountOfMoney);   //
             stmt.setInt(2, clientId);    //
             stmt.executeUpdate();
         }

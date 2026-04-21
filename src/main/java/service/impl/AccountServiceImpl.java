@@ -67,7 +67,7 @@ public class AccountServiceImpl implements AccountService {
             if(clientByID == null){
                 System.out.println("Client not found.");
             } else {
-                if (password != null && clientByID.getPassword().equals(password)) {
+                if (clientByID.getPassword().equals(password)) {
                     System.out.println("Client Information:");
                     System.out.println("First name: " + clientByID.getFirstName() + ", Last name: " + clientByID.getLastName() + "\n" +
                             "CNP: " + clientByID.getCNP() + ", Series and CI Number: " + clientByID.getSeriesAndNumberOfCI() + "\n" +
@@ -80,7 +80,7 @@ public class AccountServiceImpl implements AccountService {
                         System.out.println("Account not found.");
                     } else {
                         System.out.println("Account information:");
-                        System.out.println("Money: " + accountByClientID.getAmountOfMoney());
+                        System.out.println("Amount of Money: " + accountByClientID.getAmountOfMoney());
                     }
 
                     System.out.println("Card information: ");
@@ -95,7 +95,12 @@ public class AccountServiceImpl implements AccountService {
 
                     System.out.println("IBAN information: ");
                     IBAN ibanByAccountID = ibanDAO.getIbanByAccountID(accountByClientID.getId(), connection);
-                    System.out.println("IBAN: " + ibanByAccountID.getIBAN());
+                    if(ibanByAccountID == null){
+                        System.out.println("No IBAN found.");
+                    } else {
+                        System.out.println("IBAN: " + ibanByAccountID.getIBAN());
+
+                    }
                 }
             }
         } catch (SQLException e){
@@ -110,14 +115,14 @@ public class AccountServiceImpl implements AccountService {
             return;
         }
 
-        System.out.println("Enter the IBAN:");
+        System.out.println("Enter the holder IBAN:");
         String iban = Utils.readInputString();
 
-        System.out.println("Enter the account holder username: ");
+        System.out.println("Enter the holder username: ");
         String holderUsername = Utils.readInputString();
 
         System.out.println("Amount of money that you want to transfer: ");
-        int ammountOfMoney = Utils.readInputInteger();
+        int amountOfMoney = Utils.readInputInteger();
         Account accountOfCurrentUser;
         try {
             accountOfCurrentUser = accountDAO.getAccountByClientID(client.getId(), connection);
@@ -125,16 +130,15 @@ public class AccountServiceImpl implements AccountService {
             throw new AccountNotFoundException("Account not found", e);
         }
 
-        if(accountOfCurrentUser.getAmountOfMoney() < ammountOfMoney){
+        if(accountOfCurrentUser.getAmountOfMoney() < amountOfMoney){
             System.out.println("You don't have that amount in your account");
-            return;
         } else {
             try {
                 connection.setAutoCommit(false);
                 Client clientByID = clientDAO.getClientByUsername(holderUsername, connection);
 
                 if(clientByID == null){
-                    System.out.println("No holder found with this username.");
+                    System.out.println("No holder found.");
                 } else if (clientByID.getUsername().equals(holderUsername)) {
                     Account accountByClientID = accountDAO.getAccountByClientID(clientByID.getId(), connection);
 
@@ -147,16 +151,20 @@ public class AccountServiceImpl implements AccountService {
                             System.out.println("IBAN not found.");
                         } else {
                             if (ibanByAccountID.getIBAN() != null && ibanByAccountID.getIBAN().equals(iban)) {
-                                long totalAmmountOfMoney = accountByClientID.getAmountOfMoney() + ammountOfMoney;
-                                accountDAO.updateAmmountOfMoney(clientByID.getId(), totalAmmountOfMoney, connection);
+                                long totalAmountOfMoney = accountByClientID.getAmountOfMoney() + amountOfMoney;
+                                accountDAO.updateAmountOfMoney(clientByID.getId(), totalAmountOfMoney, connection);
 
                                 Account accountByClientID1 = accountDAO.getAccountByClientID(client.getId(), connection);
-                                long currentUserAmountMoney = accountByClientID1.getAmountOfMoney() - ammountOfMoney;
-                                accountDAO.updateAmmountOfMoney(client.getId(), currentUserAmountMoney, connection);
-                                System.out.println("Transfer completed successfully!");
+                                if(accountByClientID1 == null){
+                                    System.out.println("Account not found.");
+                                } else {
+                                    long currentUserAmountMoney = accountByClientID1.getAmountOfMoney() - amountOfMoney;
+                                    accountDAO.updateAmountOfMoney(client.getId(), currentUserAmountMoney, connection);
+                                    System.out.println("Transfer completed successfully!");
 
-                                Utils.logEntry("Transferred money to " + clientByID.getId() + ", " +
-                                        clientByID.getUsername(), client.getId(), connection);
+                                    Utils.logEntry("Transferred money to " + clientByID.getId() + ", " +
+                                            clientByID.getUsername(), client.getId(), connection);
+                                }
                             } else {
                                 System.out.println("No IBAN was found.");
                             }
@@ -203,9 +211,10 @@ public class AccountServiceImpl implements AccountService {
             throw new AccountNotFoundException("Account not found.", e);
         }
 
+
         System.out.println("How much money do you want to withdraw?");
         int money = readInputInteger();
-        long totalAmmountOfMoney;
+        long totalAmountOfMoney = 0L;
 
         try {
             connection.setAutoCommit(false);
@@ -214,14 +223,19 @@ public class AccountServiceImpl implements AccountService {
         }
 
         try {
-            if (accountByClientID.getAmountOfMoney() < money) {
-                System.out.println("You don't have that amount in your account.");
-                return;
+
+            if(accountByClientID == null){
+                System.out.println("Account not found.");
             } else {
-                totalAmmountOfMoney = accountByClientID.getAmountOfMoney() - (long) money;
+                if (accountByClientID.getAmountOfMoney() < money) {
+                    System.out.println("You don't have that amount in your account.");
+                    return;
+                } else {
+                    totalAmountOfMoney = accountByClientID.getAmountOfMoney() - (long) money;
+                }
             }
 
-            accountDAO.updateAmmountOfMoney(client.getId(), totalAmmountOfMoney, connection);
+            accountDAO.updateAmountOfMoney(client.getId(), totalAmountOfMoney, connection);
 
             System.out.println("Withdraw successfully!");
 
@@ -266,13 +280,17 @@ public class AccountServiceImpl implements AccountService {
         }
 
         try {
-            long totalAmmountOfMoney = accountByClientID.getAmountOfMoney() + (long) deposit;
-            accountDAO.updateAmmountOfMoney(client.getId(), totalAmmountOfMoney, connection);
+            if(accountByClientID == null){
+                System.out.println("Account not found.");
+            } else {
+                long totalAmountOfMoney = accountByClientID.getAmountOfMoney() + (long) deposit;
+                accountDAO.updateAmountOfMoney(client.getId(), totalAmountOfMoney, connection);
 
-            System.out.println("Money are in account ;)");
+                System.out.println("Money are in account ;)");
+            }
 
             try {
-                Utils.logEntry("Deposit ammount of money: " + deposit, client.getId(), connection);
+                Utils.logEntry("Deposit amount of money: " + deposit, client.getId(), connection);
             } catch (AuditTrailNotSavedException e) {
                 System.out.println("The AT entry is not saved.");
             }
@@ -281,7 +299,7 @@ public class AccountServiceImpl implements AccountService {
         } catch (SQLException e){
             try {
                 connection.rollback();
-                System.out.println("Tranzaction failed.");
+                System.out.println("Transaction failed.");
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
             }
