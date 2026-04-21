@@ -178,21 +178,5 @@ public class ClientServiceIImpl implements ClientService {
         }
     }
 
-    @Override
-    public void createAnotherAdmin(Connection connection) throws ClientNotUpdatedException {
-        Client client = null;
-        try {
-            client = createClient(0, connection);
-        } catch (ClientNotSavedException e) {
-            throw new RuntimeException(e);
-        }
 
-        try {
-            clientDAO.updateClientRole(client.getId(), Role.ADMIN, connection);
-            clientDAO.updateClientStatus(client.getId(), Status.APPROVED, connection);
-            System.out.println("Admin created successfully!");
-        } catch (SQLException e){
-            throw new ClientNotUpdatedException("Client role and status not updated", e);
-        }
-    }
 }

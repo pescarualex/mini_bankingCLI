@@ -4,6 +4,7 @@ import dao.*;
 import db.DatabaseConnection;
 import enums.Role;
 import exceptions.*;
+import model.Admin;
 import model.Client;
 import service.*;
 import service.impl.*;
@@ -11,6 +12,7 @@ import utils.Utils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 import static utils.Utils.readInputInteger;
 
@@ -22,6 +24,7 @@ public class Main {
     static CardDAO cardDAO = new CardDAO();
     static IbanDAO ibanDAO = new IbanDAO();
     static BankDAO bankDAO = new BankDAO();
+    static AdminDAO adminDAO = new AdminDAO();
 
     static AuditTrailService auditTrailService = new AuditTrailServiceImpl(auditTrailDAO);
     static AccountService accountService = new AccountServiceImpl(accountDAO, clientDAO, cardDAO, ibanDAO);
@@ -29,10 +32,22 @@ public class Main {
     static CardService cardService = new CardServiceImpl(cardDAO);
     static IBANService ibanService = new IBANServiceImpl(ibanDAO);
     static ClientService clientService = new ClientServiceIImpl(clientDAO, bankDAO, accountService, cardService, ibanService);
+    static AdminService adminService = new AdminServiceImpl(adminDAO);
 
 
     public static void main(String[] args) throws ConnectionNotFoundException, ClientNotFoundException,
-            AccountNotFoundException, ClientNotUpdatedException, AuditTrailNotFoundException {
+            AccountNotFoundException, AuditTrailNotFoundException, AdminNotFoundException {
+
+        try(Connection connection = DatabaseConnection.getConnection()) {
+            List<Admin> allAdmins = adminDAO.getAllAdmins(connection);
+            if (allAdmins.isEmpty()){
+                System.out.println("It looks like you have no administrator here.\n" +
+                        "Let's create one.");
+                adminService.createAdmin(connection);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
         while(true){
             System.out.println("Welcome!\n" +
@@ -78,23 +93,23 @@ public class Main {
         }
     }
 
-    private static void admin(Connection connection) throws ClientNotFoundException, AuditTrailNotFoundException,
-            ClientNotUpdatedException, ConnectionNotFoundException {
+    private static void admin(Connection connection) throws AuditTrailNotFoundException,
+            ConnectionNotFoundException, AdminNotFoundException {
         System.out.println("To login, enter your username: ");
         String username = Utils.readInputString();
 
-        Client clientByUsername = null;
+        Admin adminByUsername = null;
         try {
-            clientByUsername = clientDAO.getClientByUsername(username, connection);
+            adminByUsername = adminDAO.getAdminByUsername(username, connection);
         } catch (SQLException e) {
-            throw new ClientNotFoundException("Client not found by username.", e);
+            throw new AdminNotFoundException("Admin not found by username.", e);
         }
 
-        if (clientByUsername == null) {
-            System.out.println("No user found.");
-        } else if (clientByUsername.getRole() == Role.ADMIN) {
+        if (adminByUsername == null) {
+            System.out.println("No admin found.");
+        } else if (adminByUsername.getRole() == Role.ADMIN) {
             while (true) {
-                System.out.println("Welcome " + clientByUsername.getUsername() + "\n" +
+                System.out.println("Welcome " + adminByUsername.getUsername() + "\n" +
                         "1. Pending users\n" +
                         "2. Full Audit Trail\n" +
                         "3. Audit Trail by client\n" +
@@ -134,8 +149,8 @@ public class Main {
                         break;
                     case 5:
                         try(Connection con = DatabaseConnection.getConnection()){
-                            clientService.createAnotherAdmin(con);
-                        } catch (SQLException e){
+                            adminService.createAdmin(con);
+                        } catch (SQLException | AdminNotFoundException e){
                             throw new ConnectionNotFoundException("Connection failed.", e);
                         }
                         break;

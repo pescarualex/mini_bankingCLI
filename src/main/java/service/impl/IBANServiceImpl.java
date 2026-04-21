@@ -1,7 +1,6 @@
 package service.impl;
 
 
-import dao.BankDAO;
 import dao.IbanDAO;
 import exceptions.AuditTrailNotSavedException;
 import exceptions.CounterExceededException;
@@ -22,7 +21,6 @@ import java.util.Set;
 
 public class IBANServiceImpl implements IBANService {
     private static final Set<String> UNIQUE_IBANs = new HashSet<>();
-    private final BankServiceImpl bankService = new BankServiceImpl(new BankDAO());
     private static Map<String, Integer> MAP_VALUES;
 
     private IbanDAO ibanDAO;
@@ -133,11 +131,11 @@ public class IBANServiceImpl implements IBANService {
         for (char ch : ibanToCheck.toString().toCharArray()) {
             convertLetterToNumber(MAP_VALUES, stringBuilder, ch);
         }
-        BigInteger bigIntegerFinalCheck = new BigInteger(stringBuilder.toString());
-        BigInteger result = bigIntegerFinalCheck.mod(BigInteger.valueOf(97));
-        int i = Integer.parseInt(result.toString());
+        BigInteger ibanToFinalCheck = new BigInteger(stringBuilder.toString());
+        BigInteger finalResult = ibanToFinalCheck.mod(BigInteger.valueOf(97));
+        int result = Integer.parseInt(finalResult.toString());
 
-        return i;
+        return result;
     }
 
     // convert letters to number. Each letter correspond to a number from MAP_VALUES

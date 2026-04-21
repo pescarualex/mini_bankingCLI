@@ -12,5 +12,4 @@ public interface ClientService {
     Client createClient(int bankId, Connection connection) throws ClientNotSavedException;
     void register(Connection connection) throws CounterExceededException, BankNotFoundException;
     void pendingClients(Connection connection);
-    void createAnotherAdmin(Connection connection) throws ClientNotUpdatedException;
 }
