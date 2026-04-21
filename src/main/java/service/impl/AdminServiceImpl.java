@@ -8,6 +8,7 @@ import exceptions.AuditTrailNotSavedException;
 import model.Admin;
 import model.Client;
 import service.AdminService;
+import utils.PasswordUtils;
 import utils.Utils;
 
 import java.sql.Connection;
@@ -35,7 +36,9 @@ public class AdminServiceImpl implements AdminService {
         admin.setUsername(Utils.readInputString());
 
         System.out.println("Set a password:");
-        admin.setPassword(Utils.readInputString());
+        String rawPassword = Utils.readInputString();
+        String hashedPassword = PasswordUtils.hash(rawPassword);
+        admin.setPassword(hashedPassword);
 
         admin.setRole(Role.ADMIN);
         admin.setStatus(Status.APPROVED);

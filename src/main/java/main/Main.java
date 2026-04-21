@@ -98,6 +98,8 @@ public class Main {
             ConnectionNotFoundException, AdminNotFoundException {
         System.out.println("To login, enter your username: ");
         String username = Utils.readInputString();
+        System.out.println("Enter the password:");
+        String password = Utils.readInputString();
 
         Admin adminByUsername = null;
         try {
@@ -108,7 +110,7 @@ public class Main {
 
         if (adminByUsername == null) {
             System.out.println("No admin found.");
-        } else if (adminByUsername.getRole() == Role.ADMIN) {
+        } else if (adminByUsername.getRole() == Role.ADMIN && PasswordUtils.verifyPassword(password, adminByUsername.getPassword())) {
             while (true) {
                 System.out.println("Welcome " + adminByUsername.getUsername() + "\n" +
                         "1. Pending users\n" +
