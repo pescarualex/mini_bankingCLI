@@ -29,6 +29,8 @@ Mini Banking CLI is a console-based application that simulates a simplified bank
 - MOD 97 IBAN validation (Romanian format)
 - Transaction management with rollback on failure
 - Audit trail logging for all key operations
+- BCrypt hash for password
+- `.env` for database credentials
 
 ---
 
@@ -67,7 +69,7 @@ src/main/java/
 ├── service/      # Service interfaces
 │   └── impl/     # Service implementations
 ├── dao/          # Data Access Objects
-├── model/        # Domain models (Client, Account, Card, IBAN, Bank, AuditTrail)
+├── model/        # Domain models (Client, Account, Card, IBAN, Bank, AuditTrail, Admin)
 ├── enums/        # Role, Status
 ├── exceptions/   # Custom exception classes
 ├── db/           # Database connection
@@ -91,28 +93,13 @@ Welcome!
 
 **Logging in** — enter your username and password to access deposit, withdraw, transfer, and account detail features.
 
-**Admin panel** — accessible by username only (no password prompt). Requires the account to have the `ADMIN` role.
+**Admin panel** — accessible to users that has the `Admin` role only. Approve `PENDING` users, see full or by user audit trail, add banks and new admins.
 
----
-
-## Running Tests
-
-The project includes unit tests for IBAN generation and validation:
-
-```bash
-mvn test
 ```
 
-Tests cover:
-- IBAN length (28 characters for Romanian format)
-- IBAN structural format (`^[A-Z]{2}[0-9]{2}[A-Z0-9]{11,30}$`)
-- MOD 97 validity check
-- Uniqueness of generated IBANs
+## 🔮 Future Improvements
 
----
-
-## ⚠️ Known Limitations
-
-- Passwords are stored as plaintext — BCrypt hashing is planned for a future update
-- Database credentials are currently hardcoded — environment variable support is planned
-- Card and IBAN uniqueness is partially enforced in-memory; database `UNIQUE` constraints are recommended in production
+- Refactor `Admin` and `Client` into a proper inheritance hierarchy (`User` base class) to eliminate code duplication and better reflect OOP principles
+- BCrypt password hashing *(already implemented)*
+- Environment variable support for database credentials *(already implemented)*
+- Database-level `UNIQUE` constraints for card numbers and IBANs *(already implemented)*
