@@ -130,7 +130,7 @@ public class AccountServiceImpl implements AccountService {
             accountOfCurrentUser = accountDAO.getAccountByClientID(client.getId(), connection);
             IBAN ibanOfCurrentUser = ibanDAO.getIbanByAccountID(accountOfCurrentUser.getId(), connection);
 
-            if(ibanOfCurrentUser.getIBAN().equals(iban) && client.getUsername().equals(holderUsername)){
+            if(ibanOfCurrentUser.getIBAN().equals(iban) || client.getUsername().equals(holderUsername)){
                 System.out.println("You can't transfer money into your account.");
                 throw new IllegalArgumentException("Transfer failed.");
             }

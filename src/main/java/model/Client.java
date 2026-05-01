@@ -40,7 +40,7 @@ public class Client extends User{
 
     @Override
     public String toString() {
-        return "Client{" +
+        return super.toString() + "Client{" +
                 ", CNP='" + CNP + '\'' +
                 ", seriesAndNumberOfCI='" + seriesAndNumberOfCI + '\'' +
                 ", bankID=" + bankID + '\'' +
