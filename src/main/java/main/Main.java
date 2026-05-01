@@ -51,11 +51,12 @@ public class Main {
         }
 
         while(true){
-            System.out.println("Welcome!\n" +
-                    "1. Register\n" +
-                    "2. Login\n" +
-                    "3. Admin\n" +
-                    "0. Exit");
+            System.out.println("""
+                    Welcome!
+                    1. Register
+                    2. Login
+                    3. Admin
+                    0. Exit""");
 
             int option = (int) readInputInteger();
 
@@ -94,14 +95,13 @@ public class Main {
         }
     }
 
-    private static void admin(Connection connection) throws AuditTrailNotFoundException,
-            ConnectionNotFoundException, AdminNotFoundException {
+    private static void admin(Connection connection) throws AuditTrailNotFoundException, AdminNotFoundException {
         System.out.println("To login, enter your username: ");
         String username = Utils.readInputString();
         System.out.println("Enter the password:");
         String password = Utils.readInputString();
 
-        Admin adminByUsername = null;
+        Admin adminByUsername;
         try {
             adminByUsername = adminDAO.getAdminByUsername(username, connection);
         } catch (SQLException e) {
@@ -152,14 +152,14 @@ public class Main {
         }
     }
 
-    private static void login(Connection connection) throws ConnectionNotFoundException, ClientNotFoundException,
+    private static void login(Connection connection) throws ClientNotFoundException,
             AccountNotFoundException {
         System.out.println("Enter your username:");
         String username = Utils.readInputString();
         System.out.println("Enter password:");
         String password = Utils.readInputString();
 
-        Client clientByUsername = null;
+        Client clientByUsername;
 
         try {
             clientByUsername = clientDAO.getClientByUsername(username, connection);
@@ -176,11 +176,12 @@ public class Main {
                 PasswordUtils.verifyPassword(password, clientByUsername.getPassword())){
             while(true) {
                 System.out.println("Welcome, " + clientByUsername.getUsername());
-                System.out.println("1. Deposit money\n" +
-                        "2. Withdraw money\n" +
-                        "3. Transfer money\n" +
-                        "4. View account details\n" +
-                        "5. Exit");
+                System.out.println("""
+                        1. Deposit money
+                        2. Withdraw money
+                        3. Transfer money
+                        4. View account details
+                        5. Exit""");
                 int option = (int) readInputInteger();
                 switch (option) {
                     case 1:

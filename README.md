@@ -99,7 +99,7 @@ Welcome!
 
 ## 🔮 Future Improvements
 
-- Refactor `Admin` and `Client` into a proper inheritance hierarchy (`User` base class) to eliminate code duplication and better reflect OOP principles
+- Refactor `Admin` and `Client` into a proper inheritance hierarchy (`User` base class) to eliminate code duplication and better reflect OOP principles *(already implemented)*
 - BCrypt password hashing *(already implemented)*
 - Environment variable support for database credentials *(already implemented)*
 - Database-level `UNIQUE` constraints for card numbers and IBANs *(already implemented)*
