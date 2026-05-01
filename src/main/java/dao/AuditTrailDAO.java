@@ -3,7 +3,6 @@ package dao;
 import model.AuditTrail;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

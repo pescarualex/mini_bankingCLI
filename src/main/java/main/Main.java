@@ -32,7 +32,7 @@ public class Main {
     static BankService bankService = new BankServiceImpl(bankDAO);
     static CardService cardService = new CardServiceImpl(cardDAO);
     static IBANService ibanService = new IBANServiceImpl(ibanDAO);
-    static ClientService clientService = new ClientServiceIImpl(clientDAO, bankDAO, accountService, cardService, ibanService);
+    static ClientService clientService = new ClientServiceImpl(clientDAO, bankDAO, accountService, cardService, ibanService);
     static AdminService adminService = new AdminServiceImpl(adminDAO);
 
 
@@ -57,7 +57,7 @@ public class Main {
                     "3. Admin\n" +
                     "0. Exit");
 
-            int option = readInputInteger();
+            int option = (int) readInputInteger();
 
             switch (option){
                 case 1:
@@ -119,7 +119,7 @@ public class Main {
                         "4. Add bank\n" +
                         "5. Create an Admin\n" +
                         "0. Exit");
-                int option = readInputInteger();
+                int option = (int) readInputInteger();
 
                 switch (option) {
                     case 1:
@@ -197,7 +197,7 @@ public class Main {
                         "3. Transfer money\n" +
                         "4. View account details\n" +
                         "5. Exit");
-                int option = readInputInteger();
+                int option = (int) readInputInteger();
                 switch (option) {
                     case 1:
                         try(Connection con = DatabaseConnection.getConnection()){

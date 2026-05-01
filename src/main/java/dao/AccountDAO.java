@@ -53,8 +53,8 @@ public class AccountDAO {
 
         try ( PreparedStatement stmt = connection.prepareStatement(sql)) {
 
-            stmt.setLong(1, amountOfMoney);   //
-            stmt.setInt(2, clientId);    //
+            stmt.setLong(1, amountOfMoney);
+            stmt.setInt(2, clientId);
             stmt.executeUpdate();
         }
     }

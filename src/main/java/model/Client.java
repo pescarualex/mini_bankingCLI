@@ -15,6 +15,11 @@ public class Client {
     private Status status;
     private int bankID;
 
+    public Client(){
+        setRole(Role.CLIENT);
+        setStatus(Status.PENDING);
+    }
+
     public int getId(){
         return id;
     }

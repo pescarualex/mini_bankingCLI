@@ -2,7 +2,6 @@ package service.impl;
 
 import dao.BankDAO;
 import dao.ClientDAO;
-import enums.Role;
 import enums.Status;
 import exceptions.*;
 import model.Account;
@@ -21,7 +20,7 @@ import java.util.List;
 
 import static utils.Utils.readInputInteger;
 
-public class ClientServiceIImpl implements ClientService {
+public class ClientServiceImpl implements ClientService {
 
     private final ClientDAO clientDAO;
     private final BankDAO bankDAO;
@@ -29,8 +28,8 @@ public class ClientServiceIImpl implements ClientService {
     private final CardService cardService;
     private final IBANService ibanService;
 
-    public ClientServiceIImpl(ClientDAO clientDAO, BankDAO bankDAO,
-                              AccountService accountService, CardService cardService, IBANService ibanService){
+    public ClientServiceImpl(ClientDAO clientDAO, BankDAO bankDAO,
+                             AccountService accountService, CardService cardService, IBANService ibanService){
         this.clientDAO = clientDAO;
         this.bankDAO = bankDAO;
         this.accountService = accountService;
@@ -63,8 +62,8 @@ public class ClientServiceIImpl implements ClientService {
         client.setPassword(hashedPassword);
 
         client.setBankID(bankID);
-        client.setRole(Role.CLIENT);
-        client.setStatus(Status.PENDING);
+//        client.setRole(Role.CLIENT);
+//        client.setStatus(Status.PENDING);
 
         int clientIDFromDB = 0;
         try {
@@ -165,7 +164,7 @@ public class ClientServiceIImpl implements ClientService {
                     System.out.println(client);
                 }
                 System.out.println("To approve a client, enter the client ID:");
-                int clientID = readInputInteger();
+                int clientID = (int) readInputInteger();
                 try {
                     clientDAO.updateClientStatus(clientID, Status.APPROVED, connection);
                     Utils.logEntry("Updated client status to `APPROVED` for client id: " + clientID, connection);

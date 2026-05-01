@@ -18,8 +18,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class IBANServiceImpl implements IBANService {
-    private static Map<String, Integer> MAP_VALUES;
-
     private final IbanDAO ibanDAO;
 
     public IBANServiceImpl(IbanDAO ibanDAO){
@@ -49,18 +47,18 @@ public class IBANServiceImpl implements IBANService {
     }
 
     @Override
-    public String generateIBAN(String countryCode, Bank bank) throws CounterExceededException {
-        MAP_VALUES = getStringIntegerMap();
-        int counter = 0;
+    public String generateIBAN(String countryCode, Bank bank) {
+        Map<String, Integer> MAP_VALUES = getStringIntegerMap();
         int uniqueCounter = 0;
-        String finalIban = null;
-        while (counter < 5) {
+        int counter = 0;
+        String finalIban = "";
+        while(counter < 5) {
             String checksum = "00";
             String bankCode = bank.getBankCode();
             StringBuilder bankIdentificationCode = new StringBuilder(uniqueCounter + Utils.generateNumbers(3));
             StringBuilder uniqueNrOfAccount = new StringBuilder(Utils.generateNumbers(16));
 
-            while(uniqueNrOfAccount.length() < 16){
+            while (uniqueNrOfAccount.length() < 16) {
                 uniqueNrOfAccount.insert(0, "0");
             }
 
@@ -107,14 +105,9 @@ public class IBANServiceImpl implements IBANService {
             } else {
                 counter++;
             }
-            return finalIban;
         }
 
-        if(counter == 5) {
-            throw new CounterExceededException(counter);
-        } else {
-            throw new IllegalArgumentException("Verification of IBAN may be inaccurate. Try again!");
-        }
+        return finalIban;
     }
 
 
@@ -123,13 +116,11 @@ public class IBANServiceImpl implements IBANService {
         /// Final check if entire iban after checksum is generated % 97 == 1 to ensure validity
         StringBuilder stringBuilder = new StringBuilder();
         for (char ch : ibanToCheck.toString().toCharArray()) {
-            convertLetterToNumber(MAP_VALUES, stringBuilder, ch);
+            convertLetterToNumber(getStringIntegerMap(), stringBuilder, ch);
         }
         BigInteger ibanToFinalCheck = new BigInteger(stringBuilder.toString());
         BigInteger finalResult = ibanToFinalCheck.mod(BigInteger.valueOf(97));
-        int result = Integer.parseInt(finalResult.toString());
-
-        return result;
+        return Integer.parseInt(finalResult.toString());
     }
 
     // convert letters to number. Each letter correspond to a number from MAP_VALUES

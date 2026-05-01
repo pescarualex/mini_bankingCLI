@@ -73,7 +73,7 @@ public class Utils {
         return scanner.nextLine();
     }
 
-    public static int readInputInteger(){
-        return Integer.parseInt(scanner.nextLine());
+    public static long readInputInteger(){
+        return Long.parseLong(scanner.nextLine());
     }
 }

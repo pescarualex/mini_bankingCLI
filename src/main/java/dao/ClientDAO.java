@@ -96,8 +96,8 @@ public class ClientDAO{
 
         try ( PreparedStatement stmt = connection.prepareStatement(sql)) {
 
-            stmt.setString(1, status.name());   //
-            stmt.setInt(2, clientId);    //
+            stmt.setString(1, status.name());
+            stmt.setInt(2, clientId);
             stmt.executeUpdate();
         }
     }
@@ -106,8 +106,8 @@ public class ClientDAO{
         String sql = "UPDATE client SET role = ? WHERE id = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, role.name());   //
-            stmt.setInt(2, clientId);    //
+            stmt.setString(1, role.name());
+            stmt.setInt(2, clientId);
             stmt.executeUpdate();
         }
     }

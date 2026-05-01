@@ -6,7 +6,6 @@ import enums.Status;
 import exceptions.AdminNotFoundException;
 import exceptions.AuditTrailNotSavedException;
 import model.Admin;
-import model.Client;
 import service.AdminService;
 import utils.PasswordUtils;
 import utils.Utils;
@@ -43,7 +42,7 @@ public class AdminServiceImpl implements AdminService {
         admin.setRole(Role.ADMIN);
         admin.setStatus(Status.APPROVED);
 
-        int adminID = 0;
+        int adminID;
         try {
             adminID = adminDAO.saveAdmin(admin, connection);
         } catch (SQLException e) {

@@ -31,28 +31,28 @@ public class BankDAO{
         throw new SQLException("Failed to retrieve generated ID.");
     }
 
-    public Bank getBankByClientID(int client_ID, Connection connection) throws SQLException {
-        String sql = "SELECT id, bankName, bankSwift, paymentNetwork, bankCode " +
-                "FROM bank WHERE client_ID = ?";
-
-        try( PreparedStatement stmt = connection.prepareStatement(sql)){
-            stmt.setInt(1, client_ID);
-
-
-            ResultSet resultSet = stmt.executeQuery();
-            if (resultSet.next()){
-                Bank bank = new Bank();
-                bank.setID(resultSet.getInt("id"));
-                bank.setBankName(resultSet.getString("bankName"));
-                bank.setBankSwift(resultSet.getString("bankSwift"));
-                bank.setPaymentNetwork(resultSet.getString("paymentNetwork"));
-                bank.setBankCode(resultSet.getString("bankCode"));
-
-                return bank;
-            }
-        }
-        return null;
-    }
+//    public Bank getBankByClientID(int client_ID, Connection connection) throws SQLException {
+//        String sql = "SELECT id, bankName, bankSwift, paymentNetwork, bankCode " +
+//                "FROM bank WHERE client_Id = ?";
+//
+//        try( PreparedStatement stmt = connection.prepareStatement(sql)){
+//            stmt.setInt(1, client_ID);
+//
+//
+//            ResultSet resultSet = stmt.executeQuery();
+//            if (resultSet.next()){
+//                Bank bank = new Bank();
+//                bank.setID(resultSet.getInt("id"));
+//                bank.setBankName(resultSet.getString("bankName"));
+//                bank.setBankSwift(resultSet.getString("bankSwift"));
+//                bank.setPaymentNetwork(resultSet.getString("paymentNetwork"));
+//                bank.setBankCode(resultSet.getString("bankCode"));
+//
+//                return bank;
+//            }
+//        }
+//        return null;
+//    }
 
     public Bank getBankByBankName(String bankName, Connection connection) throws SQLException {
         String sql = "SELECT id, bankName, bankSwift, paymentNetwork, bankCode " +
