@@ -123,39 +123,23 @@ public class Main {
 
                 switch (option) {
                     case 1:
-                        try(Connection con = DatabaseConnection.getConnection()){
-                            clientService.pendingClients(con);
-                        } catch (SQLException | AuditTrailNotSavedException e){
-                            throw new ConnectionNotFoundException("Connection failed.", e);
+                        try {
+                            clientService.pendingClients(connection);
+                        } catch (AuditTrailNotSavedException e) {
+                            throw new RuntimeException(e);
                         }
                         break;
                     case 2:
-                        try(Connection con = DatabaseConnection.getConnection()){
-                            auditTrailService.fullAuditTrail(con);
-                        } catch (SQLException e){
-                            throw new ConnectionNotFoundException("Connection failed.", e);
-                        }
+                            auditTrailService.fullAuditTrail(connection);
                         break;
                     case 3:
-                        try(Connection con = DatabaseConnection.getConnection()){
-                            auditTrailService.auditTrailByClient(con);
-                        } catch (SQLException e){
-                            throw new ConnectionNotFoundException("Connection failed.", e);
-                        }
+                            auditTrailService.auditTrailByClient(connection);
                         break;
                     case 4:
-                        try(Connection con = DatabaseConnection.getConnection()){
-                            bankService.addBank(con);
-                        } catch (SQLException e){
-                            throw new ConnectionNotFoundException("Connection failed.", e);
-                        }
+                            bankService.addBank(connection);
                         break;
                     case 5:
-                        try(Connection con = DatabaseConnection.getConnection()){
-                            adminService.createAdmin(con);
-                        } catch (SQLException | AdminNotFoundException e){
-                            throw new ConnectionNotFoundException("Connection failed.", e);
-                        }
+                            adminService.createAdmin(connection);
                         break;
                     case 0:
                         return;
@@ -200,32 +184,16 @@ public class Main {
                 int option = (int) readInputInteger();
                 switch (option) {
                     case 1:
-                        try(Connection con = DatabaseConnection.getConnection()){
-                            accountService.depositMoney(clientByUsername, con);
-                        } catch (SQLException e){
-                            throw new ConnectionNotFoundException("Connection failed.", e);
-                        }
+                            accountService.depositMoney(clientByUsername, connection);
                         break;
                     case 2:
-                        try(Connection con = DatabaseConnection.getConnection()){
-                            accountService.withdrawMoney(clientByUsername, con);
-                        } catch (SQLException e){
-                            throw new ConnectionNotFoundException("Connection failed.", e);
-                        }
+                            accountService.withdrawMoney(clientByUsername, connection);
                         break;
                     case 3:
-                        try(Connection con = DatabaseConnection.getConnection()){
-                            accountService.transferMoney(clientByUsername, con);
-                        } catch (SQLException e){
-                            throw new ConnectionNotFoundException("Connection failed.", e);
-                        }
+                            accountService.transferMoney(clientByUsername, connection);
                         break;
                     case 4:
-                        try(Connection con = DatabaseConnection.getConnection()){
-                            accountService.viewAccountDetails(clientByUsername, con);
-                        } catch (SQLException e){
-                            throw new ConnectionNotFoundException("Connection failed.", e);
-                        }
+                            accountService.viewAccountDetails(clientByUsername, connection);
                         break;
                     case 5:
                         return;

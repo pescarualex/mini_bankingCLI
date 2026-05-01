@@ -102,11 +102,11 @@ public class IBANServiceImpl implements IBANService {
 
             if (i == 1) {
                 finalIban = countryCode + check + bankCode + bankIdentificationCode + uniqueNrOfAccount;
+                break;
             } else {
                 counter++;
             }
         }
-
         return finalIban;
     }
 

@@ -27,7 +27,7 @@ public class Account {
     }
 
     public void setAmountOfMoney(long money){
-        if(money <= 0){
+        if(money < 0){
             throw new IllegalArgumentException("Negative sold not allowed.");
         } else {
             this.amountOfMoney = money;
